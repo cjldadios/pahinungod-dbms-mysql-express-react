@@ -5,96 +5,48 @@ const mysql = require('mysql');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'password',
-  database: 'pahinungod'
+// importing request handlers
+const tutorial = require('./Requests/TutorialRequest');
+const user = require('./Requests/UserRequest');
+const login = require('./Requests/LoginRequest');
+
+// server route handlers
+app.use('/', tutorial);
+app.use('/', user);
+app.use('/', login);
+
+
+// GET method route
+app.get('/', function (req, res) {
+  res.send('GET request to the homepage')
 })
 
-// contains all the query statements to be u
-const query = require('./Database/Query.js');
 
+// test the connection then log it to the console
+const connection = require('./Database/Connection');
 connection.connect(err => {
   if(err) {
     return err;
   }
+  // else console.log(database.connection);
 });
-console.log(connection);
+console.log(`Connection to database server successful`);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
-// tutorial sample GET request
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
-// tutorial sample POST request
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
-
-//GET all users
-app.get('/user/all', (req, res) => { // accessable via route localhost:5000/user/all
-  connection.query( query.SELECT_ALL_USER, (err, results) => {
-    if(err) {                    // if error
-      return res.send(err);      // render error message      
-    }
-    else {                        // if no error
-      return res.json({           // render the query result
-        data: results
-      })
-    }
-  });
-}); // this is working
-
-// LOGIN POST
-app.post('/login', (req, res) => {
-  console.log(req.body);
-
-  res.send( // this must be string or JSON object
-    {
-      "post" : "response", "post2" : "response2"
-    }
-  );
-});
-
-// Get all users POST
-app.post('/get-all-users', (req, res) => {
-  console.log(req.body.message);
-
-  connection.query( query.SELECT_ALL_USER, (err, results) => {
-    console.log(results);
-    if(err) {                    // if error
-      res.send(err);      // render error message      
-    }
-    else {                        // if no error
-      res.send( results );         // send the results to the client
-    }
-  });
-
-});
-
-// # sample INSERT but incompatible code
-// app.get('/products/add', (req, res) => {
-//   const { name, price } = req.query;
-//   //console.log(name, price);
-//   const INSERT_PRODUCTS_QUERY = `INSERT INTO products(name, price
-//   ) VALUES('${name}', '${price}')`;
-//   connection.query(INSERT_PRODUCTS_QUERY, (err, results) => {
-//     if(err) {
-//       return res.send(err);
-//     }
-//     else {
-//       return res.send('successfuly added product')
-//     }
-//   });
-// });
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

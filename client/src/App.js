@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import { BrowserRouter, Route } from 'react-router-dom'; // for url routing
 
 // created components for testing
@@ -22,7 +22,7 @@ class App extends Component {
         <Route exact={true} path='/tutorial' component={ Tutorial } />
         <Route exact={true} path='/users' component={ Users } />
 
-        <Route exact={true} path='/' component= { Home } />
+        <Route exact={true} path='/' component={ Home } />
         <Route exact={true} path='/login' component={ Login } />
       </BrowserRouter>
     );

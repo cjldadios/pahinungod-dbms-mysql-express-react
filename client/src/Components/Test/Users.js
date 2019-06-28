@@ -38,20 +38,24 @@ class User extends Component {
         <div>
           <strong>Users in table format:</strong>
           <table>
-            <tr>
-              <th>userid</th>
-              <th>username</th> 
-              <th>password</th>
-            </tr>
-            {
-              this.state.users.map(user => 
-                <tr key={user.userid}>
-                  <td>{user.userid}</td>
-                  <td>{user.username}</td>
-                  <td>{user.password}</td>
-                </tr>
-              ) 
-            }
+            <thead>
+              <tr>
+                <th>userid</th>
+                <th>username</th> 
+                <th>password</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                this.state.users.map(user => 
+                  <tr key={user.userid}>
+                    <td>{user.userid}</td>
+                    <td>{user.username}</td>
+                    <td>{user.password}</td>
+                  </tr>
+                ) 
+              }
+            </tbody>
           </table>
 
           <hr/>

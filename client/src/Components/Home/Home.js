@@ -15,7 +15,8 @@ class Home extends Component {
     };
 
     this.setUserInfo = this.setUserInfo.bind(this);
-    this.attemptLogin = this.attemptLogin.bind(this);
+    this.setLoginStatus = this.setLoginStatus.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
   
   componentDidMount() {
@@ -28,8 +29,12 @@ class Home extends Component {
     this.setState({ user: userInfo });
   } 
 
-  attemptLogin(status) {
+  setLoginStatus(status) {
     this.setState({ isLoggedIn: status });
+  }
+
+  handleLogout() {
+    this.setState({ isLoggedIn: false });
   }
 
   render() {
@@ -51,9 +56,9 @@ class Home extends Component {
 
         { // render login form
           isLoggedIn === false ? ( // if a user is not logged in
-            <Login setUserInfo={this.setUserInfo} attemptLogin={this.attemptLogin} /> 
+            <Login setUserInfo={this.setUserInfo} setLoginStatus={this.setLoginStatus} /> 
           ) : ( // else
-            <button>Logout</ button>
+            <button onClick={this.handleLogout}>Logout</ button>
           ) // the statements are enclosed in parenthesis to render an html
         }
       </div>
