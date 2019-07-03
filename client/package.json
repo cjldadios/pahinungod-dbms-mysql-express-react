@@ -4,10 +4,13 @@
   "private": true,
   "dependencies": {
     "babel": "^6.23.0",
+    "jwt-simple": "^0.5.6",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "0.9.x"
+    "react-scripts": "0.9.x",
+    "semantic-ui": "^2.4.2",
+    "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {},
   "scripts": {

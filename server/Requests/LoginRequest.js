@@ -11,10 +11,10 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // Get all users POST
 router.post('/get-all-users', (req, res) => {
-  console.log(req.body.message);
+  //console.log(req.body.message);
 
   connection.query( query.SELECT_ALL_USER, (err, results) => {
-    console.log(results);
+    //console.log(results);
     if(err) {                    // if error
       res.send(err);      // render error message      
     }

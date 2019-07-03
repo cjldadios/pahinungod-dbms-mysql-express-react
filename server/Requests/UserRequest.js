@@ -25,10 +25,10 @@ router.get('/user/all', (req, res) => { // accessable via route localhost:5000/u
 
 // Get all users POST
 router.post('/get-all-users', (req, res) => {
-  console.log(req.body.message);
+  //console.log(req.body.message);
 
   connection.query( query.SELECT_ALL_USER, (err, results) => {
-    console.log(results);
+    //console.log(results);
     if(err) {                    // if error
       res.send(err);      // render error message      
     }
