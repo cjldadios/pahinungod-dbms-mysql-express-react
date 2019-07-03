@@ -46,7 +46,7 @@ class Admin extends Component {
           {/* this is how to include the sidebar */}
         <div className="ui grid">
           <div className="three wide column">
-            <Sidebar {...this.props}/> {/** this is the side bar */}
+            <Sidebar {...this.props} asAdmin={true}/> {/** this is the side bar */}
           </div>
           <div className="column">    {/** this is where the ADMIN Page contents should be declared */}
             <h2>Admin homepage</h2>

@@ -8,27 +8,17 @@ class Sidebar extends Component {
       isAdmin: localStorage.getItem("isAdmin"),
       asAdmin: localStorage.getItem("asAdmin"),
     };
-
-    this.handleContinueAsAdmin = this.handleContinueAsAdmin.bind(this);
-    this.handleContinueAsVolunteer = this.handleContinueAsVolunteer.bind(this);
-
   }
 
-  // nav link for admins to access admin pages
-  handleContinueAsAdmin() {
-    localStorage.setItem("asAdmin", true);
-    this.setState({asAdmin: true});
-    // redirect to admin home page 
-    this.props.history.push("/admin/" + localStorage.getItem("username"));
-  } 
+  // admin controls
 
-  handleContinueAsVolunteer() {
-    // localStorage.setItem("asAdmin", false);
-    this.setState({asAdmin: true});
-    localStorage.removeItem("asAdmin");
-    // redirect to admin home page 
-    this.props.history.push("/user/" + localStorage.getItem("username"));
-  } 
+  // user controls
+  handleViewActivities() {
+
+  }
+  handleViewProfile() {
+
+  }
 
   render() {
     
@@ -36,12 +26,37 @@ class Sidebar extends Component {
       <div>
         <div className="ui vertical secondary menu">  
           
-          <a className="item">
-            Activities
-          </a>
-          <a className="item">
-            Profile
-          </a>  
+          { // conditional rendering
+            this.state.asAdmin? ( // if admin 
+              <div>
+                <a className="item">
+                  Manage Volunteers
+                </a>
+                <a className="item">
+                  Manage Activities
+                </a>
+                <a className="item">
+                  Manage Programs
+                </a>
+                <a className="item">
+                  Manage Administrators
+                </a>
+              </div>
+            ) : (
+              <div>
+                {/** if not admin */}
+                <a className="item">
+                  Activities
+                </a>
+                <a className="item">
+                  Profile
+                </a>
+              </div>
+            )
+          } {/** end conditional rendering */}
+
+          <a className="item">this.state.asAdmin: {this.state.asAdmin}</a>
+              
         </div>
       </div>      
     );
