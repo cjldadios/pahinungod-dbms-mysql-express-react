@@ -1,0 +1,1 @@
+Copy-paste the contents of database.sql to your terminal after logging in to Mysql as root.

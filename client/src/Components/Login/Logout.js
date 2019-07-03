@@ -14,8 +14,8 @@ class Logout extends Component {
 
   handleLogout() {
     // clear localStorage
+    // localStorage.setItem("message", "Logout success");
     localStorage.clear();
-    localStorage.setItem("message", "Logout success");
     // localStorage.removeItem("username");
     // localStorage.removeItem("authenticated");
     this.setState({ authenticated: false});

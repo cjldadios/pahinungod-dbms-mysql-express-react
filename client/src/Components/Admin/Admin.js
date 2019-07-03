@@ -4,6 +4,7 @@ import React, { Component }  from 'react';
 // import Login from './../Login/Login'
 
 import Navbar from './../Navbar/Navbar'
+import Sidebar from './../Navbar/Sidebar';
 
 class Admin extends Component {
   constructor(props) {
@@ -32,11 +33,28 @@ class Admin extends Component {
   render() {
     
     return (
-      <div>
-        <Navbar {...this.props}/>
-        <h2>Admin homepage</h2>
-      </div>
-
+      <div> {
+        // check if the account is an admin, show a message that redirects back to user page
+        !localStorage.getItem('isAdmin') === true ? (
+        <div>
+          <p>Not an administrator. <a href="/user">Go back</a></p>
+        </div>
+        ): 
+        ( // this is the content of the actual admin page
+        <div>
+          <Navbar {...this.props} asAdmin={true} isAdmin={true}/>
+          {/* this is how to include the sidebar */}
+        <div className="ui grid">
+          <div className="three wide column">
+            <Sidebar {...this.props}/> {/** this is the side bar */}
+          </div>
+          <div className="column">    {/** this is where the ADMIN Page contents should be declared */}
+            <h2>Admin homepage</h2>
+          </div>
+        </div>
+        </div>
+        )
+      }</div>
     );
   }
 }

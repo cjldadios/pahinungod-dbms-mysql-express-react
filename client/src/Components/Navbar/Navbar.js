@@ -1,12 +1,13 @@
 import React, { Component }  from 'react';
-import Logout from './../Authentication/Logout';
+import Logout from './../Login/Logout';
+// import './Navbar.css'
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isAdmin: localStorage.getItem("isAdmin"),
-      asAdmin: localStorage.getItem("asAdmin"),
+      asAdmin: this.props.asAdmin,
     };
 
     this.handleContinueAsAdmin = this.handleContinueAsAdmin.bind(this);
@@ -33,8 +34,15 @@ class Navbar extends Component {
   render() {
     
     return (
-      <div>
-        <div className="ui secondary  menu">
+      <div className="">
+        <div className="ui secondary menu">
+          <div className="item">
+            
+              <h4>{
+                this.props.asAdmin ? 'Administrator' : 'Volunteer'
+              }</h4>
+          </div>
+
           <a className="active item">
             Home
           </a>
@@ -45,24 +53,20 @@ class Navbar extends Component {
             Friends
           </a>
           <div className="right menu">
-            {/* <div className="item">
-              <div className="ui icon input">
-                <input type="text" placeholder="Search..." />
-                <i className="search link icon"></i>
-              </div>
-            </div> */}
             
-            { ( localStorage.getItem("isAdmin") && !localStorage.getItem("asAdmin")) ? (
-              <a className="ui item" onClick={this.handleContinueAsAdmin}>Continue as Administrator</a> 
-            ) : (
-              <a className="ui item" onClick={this.handleContinueAsVolunteer}>Continue as Volunteer</a>
-            )}
+            { localStorage.getItem("isAdmin") ? (
+              this.props.asAdmin ? (
+                <a className="ui item" onClick={this.handleContinueAsVolunteer}>Continue as Volunteer</a>
+              ) : (
+                <a className="ui item" onClick={this.handleContinueAsAdmin}>Continue as Administrator</a>
+              )
+            ) : (<div/>)}
 
             <a className="ui item">
               <Logout {...this.props}/>
             </a>
 
-            <div className="ui item">{this.state.isAdmin + ", " + this.state.asAdmin}</div>
+            {/* <div className="ui item">{localStorage.getItem("isAdmin") + ", " + this.state.asAdmin}</div> */}
           </div>
         </div>
       </div>

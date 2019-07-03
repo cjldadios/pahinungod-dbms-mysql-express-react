@@ -1,7 +1,7 @@
 import React, { Component }  from 'react';
 
 // The Login component is imported from Login.js in ../Login directory
-import Login from './../Authentication/Login'
+import Login from './../Login/Login'
 import logo1 from './../../logo.svg';
 import logo2 from './../../logo.jpeg';
 
@@ -26,6 +26,7 @@ class Home extends Component {
     };
 
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleRedirectToUserHome = this.handleRedirectToUserHome.bind(this);
   }
   
   componentDidMount() {
@@ -42,46 +43,67 @@ class Home extends Component {
     this.forceUpdate();
   }
 
+  handleRedirectToUserHome() {
+    
+  }
+
   render() {
     //const { authenticated, username } = this.state; // this is to be able to access 'this.state.user' as simply 'user' for example
 
     return (
       <div>
-        <div className="ui menu">
-          <a>
-            <img src={logo1} alt="Logo" style={logoStyle}/>
-          </a>
-          <a>
-            <img src={logo2} alt="Logo" style={logoStyle}/>
-          </a>
-          <a className="item">
-            <h2>Ugnayan ng Pahinungod</h2>
-          </a>
-
-          <div className="right menu">
-            <div className="header item">
-              Home
-            </div>
-            <a className="item">
-              About Us
-            </a>
-            <a className="item">
-              Contact Us
-            </a>
-            <a className="item">
-              FAQs
-            </a>
+        <div> {
+          localStorage.getItem('authenticated') ? (
+          <div>
+            <p>
+              {/* redirect to user home page */}
+              <a onClick={this.props.history.push('/user')}>Go to user home.</a>
+            </p>
           </div>
-        </div>
+          ) : (
+          <div>
 
-        <div>
-        {/* // dynamic render
-          // conditional rendering using an 'inline if-else operator'
-          authenticated ? ', ' + username + '!': '.' // in single quotes, rendering a string
-        */}
-        </div>
+            <div className="ui menu">
+              <a>
+                <img src={logo1} alt="Logo" style={logoStyle}/>
+              </a>
+              <a>
+                <img src={logo2} alt="Logo" style={logoStyle}/>
+              </a>
+              <a className="item">
+                <h2>Ugnayan ng Pahinungod</h2>
+              </a>
 
-        <Login {...this.props} />
+              <div className="right menu">
+                <div className="header item">
+                  Home
+                </div>
+                <a className="item">
+                  About Us
+                </a>
+                <a className="item">
+                  Contact Us
+                </a>
+                <a className="item">
+                  FAQs
+                </a>
+              </div>
+            </div>
+
+            <div>
+            {/* // dynamic render
+              // conditional rendering using an 'inline if-else operator'
+              authenticated ? ', ' + username + '!': '.' // in single quotes, rendering a string
+            */}
+            </div>
+
+            <Login {...this.props} />
+          </div>
+          )
+        }</div>
+
+
+        
       </div>
 
     );

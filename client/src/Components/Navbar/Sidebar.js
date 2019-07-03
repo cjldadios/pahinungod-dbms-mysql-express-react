@@ -1,4 +1,5 @@
 import React, { Component }  from 'react';
+// import './Navbar.css'
 
 class Sidebar extends Component {
   constructor(props) {
@@ -33,18 +34,16 @@ class Sidebar extends Component {
     
     return (
       <div>
-        <div className="ui sidebar inverted vertical menu">
+        <div className="ui vertical secondary menu">  
+          
           <a className="item">
-            Sidebar item 1
+            Activities
           </a>
           <a className="item">
-          Sidebar item 2
-          </a>
-          <a className="item">
-            Sidebar item 3
-          </a>
+            Profile
+          </a>  
         </div>
-      </div>
+      </div>      
     );
   }
 }

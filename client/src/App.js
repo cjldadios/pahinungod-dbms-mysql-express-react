@@ -40,10 +40,11 @@ class App extends Component {
 
           <Route exact path='/' component={ Home } />
           {/* <Route exact path='/login' component={ Login } /> */}
-          <Route exact path='/user/:id' component={ User } />
+          {/* Use '' rather than 'component={ User }' to render with 'props' */}
           <Route exact path='/user/' component={ User } />
-          <Route exact path='/admin/:id' component={ Admin } />
+          <Route exact path='/user/:id' component={ User } />
           <Route exact path='/admin/' component={ Admin } />
+          <Route exact path='/admin/:id' component={ Admin } />
         </Router>
       </BrowserRouter>
     );

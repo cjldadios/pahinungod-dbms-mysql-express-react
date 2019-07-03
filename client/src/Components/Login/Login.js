@@ -90,7 +90,7 @@ class Login extends Component {
         this.setState({admin: true});
         console.log("admin: true");
       } else {
-        localStorage.setItem("isAdmin", false); // [0/1]
+        // localStorage.setItem("isAdmin", false); // [0/1]
         this.setState({admin: false});
         console.log("admin: false");
       }
@@ -111,6 +111,8 @@ class Login extends Component {
       this.setState({ message: "Login failed" });
 
       this.setState({valid: false});
+
+      localStorage.clear();
 
       this.handleLogout();
     }
