@@ -38,13 +38,11 @@ router.post('/login', (req, res) => {
     }
   })
 
-  // res.send( // this must be string or JSON object
-  //   {
-  //     "post" : "response", "post2" : "response2"
-  //   }
-
-  // );
+  
 });
+
+module.exports = router;
+
 
 // # sample INSERT but incompatible code
 // app.get('/products/add', (req, res) => {
@@ -62,5 +60,9 @@ router.post('/login', (req, res) => {
 //   });
 // });
 
+// res.send( // this must be string or JSON object
+  //   {
+  //     "post" : "response", "post2" : "response2"
+  //   }
 
-module.exports = router;
+  // );

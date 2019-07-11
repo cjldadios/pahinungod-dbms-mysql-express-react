@@ -19,10 +19,7 @@ class Home extends Component {
     this.state = {
       authenticated: localStorage.getItem("authenticated"),
       message: localStorage.getItem("message"),
-
       username: localStorage.getItem("username"),
-
-      
     };
 
     this.handleLogout = this.handleLogout.bind(this);

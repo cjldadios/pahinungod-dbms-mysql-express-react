@@ -18,7 +18,7 @@ class Logout extends Component {
     localStorage.clear();
     // localStorage.removeItem("username");
     // localStorage.removeItem("authenticated");
-    this.setState({ authenticated: false});
+    // this.setState({ authenticated: false});
 
     // console.log('logging oout');
     this.props.history.push("/"); // re

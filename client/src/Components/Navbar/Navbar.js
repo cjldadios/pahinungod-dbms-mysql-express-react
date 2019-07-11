@@ -53,6 +53,8 @@ class Navbar extends Component {
             Friends
           </a>
           <div className="right menu">
+
+            <a className="ui item" >{localStorage.getItem("username")}</a>
             
             { localStorage.getItem("isAdmin") ? (
               this.props.asAdmin ? (

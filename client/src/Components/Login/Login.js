@@ -1,4 +1,5 @@
 import React, { Component }  from 'react';
+// import { Button } from 'semantic-ui-react';
 // import { withRouter } from 'react-router-dom';
 
 const jwt = require('jwt-simple'); // encoder-decoder
@@ -11,6 +12,11 @@ class Login extends Component {
   
   constructor(props) {
     super(props); 
+
+    this.isEmpty = this.isEmpty.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.handleApply = this.handleApply.bind(this);
 
     this.state = {
       // for login server post request
@@ -25,9 +31,7 @@ class Login extends Component {
       valid: true,
     };
     
-    this.isEmpty = this.isEmpty.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
+    
   }
 
   // Login authentication // https://www.youtube.com/watch?v=oRL-pttfNSc
@@ -95,6 +99,8 @@ class Login extends Component {
         console.log("admin: false");
       }
 
+      localStorage.setItem("username", userInfo[0].username);
+
       //if( this.props.location.pathname === "/login") { // if not at home page
         // redirect to user landing page 
         this.props.history.push("/user/" + userInfo[0].username);
@@ -126,6 +132,11 @@ class Login extends Component {
     localStorage.removeItem("authenticated");
     // localStorage.setItem("authenticated", false);
     this.setState({ authenticated: false});
+  }
+
+  handleApply() {
+    this.props.history.push('/signup');
+    /** At the login form, when 'Apply' is clicked, redirect to the signup page. */
   }
 
   render() {
@@ -174,7 +185,7 @@ class Login extends Component {
                 </form>
 
                 <div className="ui message">
-                  Want to become a volunteer? <a href="#">Apply</a>
+                  Want to become a volunteer? <a  onClick={this.handleApply} >Apply</a>
                 </div>
 
                 {
@@ -190,7 +201,7 @@ class Login extends Component {
                 <div>  
                   <h2 className="ui image header">
                     <div className="content">
-                      Log-in to your account
+                      You are logged in!
                     </div>
                   </h2>
                   <div className="ui large form"  >

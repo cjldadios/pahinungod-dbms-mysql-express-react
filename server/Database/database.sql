@@ -1,4 +1,4 @@
-CREATE DATABASE pahinungod;
+CREATE DATABASE IF NOT EXISTS pahinungod;
 
 USE pahinungod;
 
@@ -16,4 +16,7 @@ INSERT INTO user(`username`, `password`, `first_name`, `last_name`, `is_admin`) 
 
 INSERT INTO user(`username`, `password`, `first_name`, `last_name`, `is_admin`) VALUES('admin','adminadmin', 'AdminFirstName','AdminLastName','1');
 
-SELECT * FROM user;
+--SELECT * FROM user;
+
+ALTER TABLE user
+ADD email varchar(255);

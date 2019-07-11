@@ -8,16 +8,21 @@ class Sidebar extends Component {
       isAdmin: localStorage.getItem("isAdmin"),
       asAdmin: localStorage.getItem("asAdmin"),
     };
+
+    this.handleViewActivities = this.handleViewActivities.bind(this);
+    this.handleViewProfile = this.handleViewProfile.bind(this);
   }
 
   // admin controls
 
   // user controls
   handleViewActivities() {
-
+    // this.props.history.push("/user/activity?username=" + localStorage.getItem("username"));
+    this.props.showActivity();
   }
   handleViewProfile() {
-
+    // this.props.history.push("/user/profile?username=" + localStorage.getItem("username"));
+    this.props.showProfile();
   }
 
   render() {
@@ -27,7 +32,7 @@ class Sidebar extends Component {
         <div className="ui vertical secondary menu">  
           
           { // conditional rendering
-            this.state.asAdmin? ( // if admin 
+            this.props.asAdmin? ( // if admin 
               <div>
                 <a className="item">
                   Manage Volunteers
@@ -45,17 +50,19 @@ class Sidebar extends Component {
             ) : (
               <div>
                 {/** if not admin */}
-                <a className="item">
+                <a className="item" onClick={this.handleViewActivities}>
                   Activities
                 </a>
-                <a className="item">
+                <a className="item" onClick={this.handleViewProfile}>
                   Profile
                 </a>
               </div>
             )
           } {/** end conditional rendering */}
 
+          {/* <a className="item">this.state.isAdmin: {this.state.isAdmin}</a>
           <a className="item">this.state.asAdmin: {this.state.asAdmin}</a>
+          <a className="item">this.props.asAdmin: {this.props.asAdmin}</a> */}
               
         </div>
       </div>      

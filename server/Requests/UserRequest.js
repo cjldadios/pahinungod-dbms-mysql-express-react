@@ -39,4 +39,20 @@ router.post('/get-all-users', (req, res) => {
 
 });
 
+// Get all users POST
+router.post('/get-user-via-username', (req, res) => {
+  // console.log(req.body.username);
+
+  connection.query( query.SELECT_USER_VIA_USERNAME(req.body.username), (err, results) => {
+    //console.log(results);
+    if(err) {                    // if error
+      res.send(err);      // render error message      
+    }
+    else {                        // if no error
+      res.send( results );         // send the results to the client
+    }
+  });
+
+});
+
 module.exports = router; // 'module' is like 'this' (verified?) 
