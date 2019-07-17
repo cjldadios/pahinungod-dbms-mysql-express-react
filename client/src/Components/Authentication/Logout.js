@@ -13,15 +13,8 @@ class Logout extends Component {
   }
 
   handleLogout() {
-    // clear localStorage
-    // localStorage.setItem("message", "Logout success");
     localStorage.clear();
-    // localStorage.removeItem("username");
-    // localStorage.removeItem("authenticated");
-    // this.setState({ authenticated: false});
-
-    // console.log('logging oout');
-    this.props.history.push("/"); // re
+    this.props.history.push("/login");
   }
 
   render() {

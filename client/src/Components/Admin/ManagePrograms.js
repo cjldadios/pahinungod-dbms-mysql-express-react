@@ -1,30 +1,23 @@
 import React, { Component }  from 'react';
 
-// The Login component is imported from Login.js in ../Login directory
-// import Login from './../Login/Login'
-
-import Navbar from './../Navigations/Navbar'
+import Navbar from './../Navigations/Navbar';
 import Sidebar from './../Navigations/Sidebar';
 
-import ManageVolunteers from './ManageVolunteers';
-import ManageActivities from './ManageActivities';
-
-class Admin extends Component {
+class ManagePrograms extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       authenticated: localStorage.getItem("authenticated"),
       message: localStorage.getItem("message"),
-
       username: localStorage.getItem("username"),
-
-      manageVolunteersIsActive: true, // show this by default
+      
+      manageVolunteersIsActive: false,
       manageActivitiesIsActive: false,
-      manageProgramsIsActive: false,
+      manageProgramsIsActive: true,
       manageAdministratorsIsActive: false,
     };
-    
+
     this.showManageVolunteers = this.showManageVolunteers.bind(this);
     this.showManageActivities = this.showManageActivities.bind(this);
     this.showManagePrograms = this.showManagePrograms.bind(this);
@@ -34,16 +27,19 @@ class Admin extends Component {
   componentDidMount() {
     // check if user is logged in
     if(!localStorage.getItem('authenticated')) {
-      this.props.history.push('/'); // redirect to home/login page if not logged
+      this.props.history.push('/login'); // redirect to home/login page if not logged
     }
 
     // if user is not logged in
     if(!localStorage.getItem('authenticated')) {
       this.props.history.push('/user/' + this.props.username) // redirect to user home page if not admin
     }
+
+    localStorage.setItem("asAdmin", true);
   }
 
-  showManageVolunteers (e) {
+  showManageVolunteers () {
+    console.log('oops, somebody triggered me');
     // this.setState({ profileIsActive: false});
     // this.setState({ activityIsActive: false});
     this.setState({ manageVolunteersIsActive: true});
@@ -79,67 +75,37 @@ class Admin extends Component {
     this.setState({ manageAdministratorsIsActive: true});
     // this.props.history.push('/manage-administrators');
   }
-  
+
   render() {
     
     return (
       <div> {
         // check if the account is an admin, show a message that redirects back to user page
         !localStorage.getItem('isAdmin') === true ? (
-        <div>
-          <p>Not an administrator. <a href="/user">Go back</a></p>
-        </div>
+          <div>
+            <p>Not an administrator. <a href="/user">Go back</a></p>
+          </div>
         ): 
         ( // this is the content of the actual admin page
-        <div>
-          <Navbar {...this.props} asAdmin={true} isAdmin={true}/>
-          {/* this is how to include the sidebar */}
-          <div className="ui grid">
-            <div className="three wide column">
-              <Sidebar {...this.props} asAdmin={true}
-                showManageVolunteers={this.showManageVolunteers}
-                showManageActivities={this.showManageActivities}
-                showManagePrograms={this.showManagePrograms}
-                showManageAdministrators={this.showManageAdministrators}
-                
-                manageVolunteersIsActive={true}
-                manageActivitiesIsActive={true}
-                manageProgramsIsActive={true}
-                manageAdministratorsIsActive={true}
-              />
-               {/** this is the side bar */}
-            </div>
-            <div className="eleven wide column">    {/** this is where the ADMIN Page contents should be declared */}
-              {/* <h2>Admin homepage</h2> */}
+          <div>
+            <Navbar history={this.props.history}/>
 
-              {/** main page content */}
-
-              <div className="center aligned two column row">
-                { // Render whichever component is clicked
-                  this.state.manageVolunteersIsActive === true ? (
-                    <div>
-                      <ManageVolunteers {...this.props} showManageVolunteers={this.showManageVolunteers}/> 
-                    </div>
-                  ) : ( 
-                    this.state.manageActivitiesIsActive === true ? (
-                      <div>
-                        <ManageActivities {...this.props} showManageActivities={this.showManageActivities}/>
-                      </div>
-                    ) : ( // Else show this page with a simple heading
-                      <div>
-                        <h2>User homepagei</h2>
-                      </div>
-                    )
-                  )
-                }
+            {/* this is how to include the sidebar */}
+            <div className="ui grid">
+              <div className="three wide column">
+                <Sidebar {...this.props} asAdmin={true} showManagePrograms={true} /> {/** this is the side bar */}
               </div>
-            </div>
+              <div className="eleven wide column">    {/** this is where the USER Page contents should be declared */}
+                <br/> 
+                <h3>Manage Programs</h3>
+
+              </div>
+            </div>          
           </div>
-        </div>
         )
       }</div>
     );
   }
 }
 
-export default Admin;
+export default ManagePrograms;

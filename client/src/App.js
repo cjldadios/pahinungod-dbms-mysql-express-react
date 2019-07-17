@@ -1,24 +1,18 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import { BrowserRouter, Route, Router } from 'react-router-dom'; // for url routing
 
-// created components for testing
-// import Tutorial from './Components/Test/Tutorial';
-import Users from './Components/Test/Users';
+// created components 
+// import Navbar from './Components/Navigations/Navbar';
+import Login from './Components/Authentication/Login';
+import Signup from './Components/Authentication/Signup';
 
-// created components
-import Home from './Components/Home/Home';
-// import Login from './Components/Authentication/Login';
-import User from './Components/User/User';
-import Admin from './Components/Admin/Admin';
-import Signup from './Components/Signup/Signup';
-import Login from './Components/Login/Login';
 import Profile from './Components/User/Profile';
 import Activity from './Components/User/Activity';
 
-import Signup2 from './Components/Signup/Signup2';
-import Signup3 from './Components/Signup/Signup3';
-
+import ManageVolunteers from './Components/Admin/ManageVolunteers';
+import ManageActivities from './Components/Admin/ManageActivities';
+import ManagePrograms from './Components/Admin/ManagePrograms';
+import ManageAdministrators from './Components/Admin/ManageAdministrators';
 
 import history from './history'
 
@@ -37,27 +31,30 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter className="App">
+        {/* <div className="ui primary menu">
+          <a className="item" href="/">/</a>
+          <a className="item" href="/login">/login</a>
+          <a className="item" href="/user/activity">/user/activity</a>
+          <a className="item" href="/user/profile">/user/profile</a>
+          <a className="item" href="/admin/manage-activities">/admin/manage-activities</a>
+          <a className="item" href="/admin/manage-volunteers">/admin/manage-volunteers</a>
+        </div> */}
+        
         <Router history={history}>
-          {/*
-          * The Tutorial component is rendered at url = http://localhost:3000/tutorial 
-          * the exact parameter when set to true renders only the component with the exact path
-          */}
-          <Route exact={true} path='/users' component={ Users } />
+ 
+          <Route exact={true} path='/' component={ Login } />
+          <Route exact={false} path='/login' component={ Login } />
+          <Route exact={false} path='/logout' component={ Login } />
+          <Route exact={false} path='/signup' component={ Signup } />
 
-          <Route exact={true} path='/' component={ Home } />
-          {/* <Route exact path='/login' component={ Login } /> */}
-          <Route exact path='/user/' component={ User } />
-          <Route path='/user/:id' component={ User } />
-          <Route exact path='/admin/' component={ Admin } />
-          <Route path='/admin/:id' component={ Admin } />
-          <Route exact path='/signup/' component={ Signup } />
-          <Route exact path='/login/' component={ Login } />
-          <Route path='/user/activity' component={ Activity } />
+          <Route exact={false} path='/user/activity' component={ Activity } />
+          <Route exact={false} path='/user/profile' component={ Profile } />
 
-          <Route path='/user/profile' component={ Profile } />
-
-          <Route exact path='/signup2' component={ Signup2 } />
-          <Route exact path='/signup3' component={ Signup3 } />
+          <Route exact={false} path='/admin/manage-volunteers' component={ ManageVolunteers } />
+          <Route exact={false} path='/admin/manage-activities' component={ ManageActivities } />
+          <Route exact={false} path='/admin/manage-programs' component={ ManagePrograms } />
+          <Route exact={false} path='/admin/manage-administrators' component={ ManageAdministrators } />
+          
         </Router>
       </BrowserRouter>
     );

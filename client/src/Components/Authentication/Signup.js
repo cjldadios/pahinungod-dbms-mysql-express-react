@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 // import { Button, Segment, Header, Form, Divider, Responsive, Grid, Image } from 'semantic-ui-react';
-import HomeNav from './../Navbar/HomeNav';
 
-import Logout from './../Login/Logout'
-
+import Logout from './../Authentication/Logout';
 import * as EmailValidator from 'email-validator';
 
 class Signup extends Component {
@@ -157,9 +155,11 @@ class Signup extends Component {
     alert("Account created successfully.");
 
     localStorage.setItem("authenticated", true);
+    localStorage.setItem("username", this.state.username);
+
     this.setState({authenticated: true});
     
-    this.props.history.push('/');
+    this.props.history.push('/user/activity');
   }
 
 
@@ -171,7 +171,8 @@ class Signup extends Component {
         { !this.state.authenticated ?
         (
           <div>
-            <HomeNav />
+            
+            {/* Navbar was here */}
 
             <br/>
 

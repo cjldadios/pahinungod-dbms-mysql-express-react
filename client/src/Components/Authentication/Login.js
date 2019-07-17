@@ -31,7 +31,6 @@ class Login extends Component {
       valid: true,
     };
     
-    
   }
 
   // Login authentication // https://www.youtube.com/watch?v=oRL-pttfNSc
@@ -83,6 +82,7 @@ class Login extends Component {
       localStorage.setItem("username", this.state.username);
       localStorage.setItem("authenticated", true);
 
+      localStorage.setItem("token", 1);
 
       // state
       this.setState({ authenticated: true });
@@ -100,10 +100,11 @@ class Login extends Component {
       }
 
       localStorage.setItem("username", userInfo[0].username);
+      localStorage.setItem("userid", userInfo[0].userid);
 
       //if( this.props.location.pathname === "/login") { // if not at home page
         // redirect to user landing page 
-        this.props.history.push("/user/" + userInfo[0].username);
+        this.props.history.push("/user/activity?usern" + userInfo[0].username);
 
       //} 
 
@@ -126,12 +127,8 @@ class Login extends Component {
   }
 
   handleLogout() {
-    // console.log('logging out')
-    localStorage.setItem("message", "Logout success");
-    localStorage.removeItem("username");
-    localStorage.removeItem("authenticated");
-    // localStorage.setItem("authenticated", false);
     this.setState({ authenticated: false});
+    localStorage.clear();     
   }
 
   handleApply() {
