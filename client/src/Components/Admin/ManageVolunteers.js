@@ -2,6 +2,8 @@ import React, { Component }  from 'react';
 
 import Navbar from './../Navigations/Navbar';
 import Sidebar from './../Navigations/Sidebar';
+import ApplicationForm from './ApplicationForm';
+
 
 class ManageVolunteers extends Component {
   constructor(props) {
@@ -15,9 +17,41 @@ class ManageVolunteers extends Component {
 
       usersArray: [],
       usersCount: 0,
+
+      tempUserIdForFetching: '',
+
+      showViewVolunteer: true,
+      showEditVolunteer: false,
+      showAddVolunteer: false,
     };
 
     this.getAllUsers = this.getAllUsers.bind(this);
+    this.handleEditUser = this.handleEditUser.bind(this);
+    this.handleAddUser = this.handleAddUser.bind(this);
+    this.handleViewUser = this.handleViewUser.bind(this);
+  }
+
+  handleEditUser(e) { 
+    console.log("handlingEditUser()");
+    this.setState({ tempUserIdForFetching: e.target.value });
+    console.log("userid to edit: " + e.target.value);
+    this.setState({ showEditVolunteer: true });
+    this.setState({ showAddVolunteer: false });
+    this.setState({ showViewVolunteer: false });
+  }
+
+  handleViewUser(e) {
+    this.setState({ tempUserIdForFetching: e.target.value });
+    this.setState({ showEditVolunteer: false });
+    this.setState({ showAddVolunteer: false });
+    this.setState({ showViewVolunteer: true });
+  }
+
+  handleAddUser(e) {
+    this.setState({ tempUserIdForFetching: e.target.value });
+    this.setState({ showEditVolunteer: false });
+    this.setState({ showAddVolunteer: true });
+    this.setState({ showViewVolunteer: false });
   }
 
   componentDidMount() {
@@ -49,7 +83,7 @@ class ManageVolunteers extends Component {
 
     const usersArray = JSON.parse(body);
     // get user activities
-    console.log("usersArray: " + JSON.stringify(usersArray));
+    // console.log("usersArray: " + JSON.stringify(usersArray));
     this.setState({ usersArray: usersArray});
     
     var usersCount = Object.keys(this.state.usersArray).length;
@@ -71,7 +105,7 @@ class ManageVolunteers extends Component {
         // check if the account is an admin, show a message that redirects back to user page
         !localStorage.getItem('isAdmin') === true ? (
         <div>
-          <p>Not an administrator. <a href="/user">Go back</a></p>
+          <p>Not an administrator. <a href="/user/activity">Go back</a></p>
         </div>
         ): 
         ( // this is the content of the actual admin page
@@ -87,37 +121,104 @@ class ManageVolunteers extends Component {
               <div className="eleven wide column">
                 <div className="center aligned two column row">{/** this is  a space between the center and the navbar */}</div>
                 
-                <div className="ui segment">
-                  <div className="ui center aligned two row">
-                    <div className="column">
-                      <h3>Manage Volunteers Pagei</h3>
-                    </div>
-                  </div>
+                {/* this is the middle segment div */}
+                  <div className="ui segment">
+                  
+                  { // conditional rendering
+                    this.state.showViewVolunteer ?
+                    (
+                      <div>
+                        <div className="ui center aligned two row">
+                          <div className="column">
+                            <h3>Manage Volunteers Page</h3>
+                          </div>
+                        </div>
 
-                  <div></div>
-
-                  <div className="column">
-                    <table className="ui celled table">
-                      <thead>
-                        <tr>
-                          <th>userid</th>
-                          <th>username</th> 
-                          <th>password</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {
-                          this.state.usersArray.map(user => 
-                            <tr key={user.userid}>
-                              <td>{user.userid}</td>
-                              <td>{user.username}</td>
-                              <td>{user.password}</td>
-                            </tr>
-                          ) 
-                        }
-                      </tbody>
-                    </table>
-                  </div>
+                        <div className="ui center aligned two row">
+                          <div className="ui secondary  menu">
+                            <div className="ui item">
+                              <strong>View:</strong>
+                            </div>
+                            <a className="active item">
+                              All
+                            </a>
+                            <a className="item">
+                              
+                            </a>
+                            <a className="item">
+                              
+                            </a>
+                            <div className="right menu">
+                              <div className="item">
+                                <div className="ui icon input">
+                                  <input type="text" placeholder="Search..."/>
+                                  <i className="search link icon"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="column">
+                          <table className="ui celled table">
+                            <thead>
+                              <tr>
+                                <th>User ID</th>
+                                <th>Username</th> 
+                                <th>Password</th>
+                                <th>Firstname</th>
+                                <th>Lastname</th>
+                                <th>
+                                <button className="ui teal button" onClick={this.handleAddUser}>Add Volunteer</button>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {
+                                this.state.usersArray.map(user => 
+                                  <tr key={user.userid}>
+                                    <td>{user.userid}</td>
+                                    <td>{user.username}</td>
+                                    <td>{user.password}</td>
+                                    <td>{user.first_name}</td>
+                                    <td>{user.last_name}</td>
+                                    <td>
+                                      <strong>Edit: </strong><br/>
+                                      <button value={user.userid} onClick={this.handleEditUser} >Profile</button>
+                                      <button value={user.userid} onClick={this.handleEditUser} >Activities</button>
+                                    </td>
+                                  </tr>
+                                ) 
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    ) : (
+                      // else if
+                      this.state.showEditVolunteer ?
+                      (
+                        <div>
+                          <br/>
+                          <button onClick={this.handleViewUser} className="ui right floated negative button">Back</button>
+                          <ApplicationForm userid={this.state.tempUserIdForFetching}  heading="Editing Volunteer Profile" 
+                          />
+                        </div>
+                      ) : (
+                        this.state.showAddVolunteer ? (
+                          <div>
+                            <br/>
+                            <button onClick={this.handleViewUser} className="ui right floated negative button">Back</button>
+                            <ApplicationForm newAccount={true} heading="New Volunteer Application" alertMessage="Volunteer added successfully" />
+                          </div>
+                        ) : (
+                          <div>
+                            <p>Opps. Something's wrong. <a href="/user/activity">Continue</a>.</p>
+                          </div>
+                        )
+                      )
+                    )
+                  }
 
                 </div>
               </div>

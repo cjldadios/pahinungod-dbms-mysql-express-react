@@ -14,6 +14,8 @@ const login = require('./Requests/LoginRequest');
 const signup = require('./Requests/SignupRequest');
 const view = require('./Requests/ViewRequest');
 
+const admin = require('./Requests/AdminRequests');
+
 // Import the SQL which initializes the database (reset)
 // const initializer = require('./Requests/Initializer'); 
 
@@ -24,6 +26,7 @@ app.use('/', user);
 app.use('/', login);
 app.use('/', signup);
 app.use('/', view);
+app.use('/', admin);
 
 // app.use('/', initializer); // not implemented
 

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-import Navbar from '../Navigations/Navbar';
-import Sidebar from './../Navigations/Sidebar';
+// import Navbar from '../Navigations/Navbar';
+// import Sidebar from './../Navigations/Sidebar';
 
 import DatePicker from 'react-datepicker';
 
-class Profile extends Component {
+class ApplicationForm extends Component {
   constructor(props){
     super(props);
 
@@ -46,11 +46,12 @@ class Profile extends Component {
     this.handleChangeBriefyExplainYourReason = this.handleChangeBriefyExplainYourReason.bind(this);
 
     this.state = {
+      creatingNewuser: this.props.new,
+      userid: this.props.userid,
       success: '',
-
       date: new Date(),
 
-      username: localStorage.getItem("username"),
+      username: '',
       email: "",
       password: "",
 
@@ -90,7 +91,7 @@ class Profile extends Component {
 
     this.getBirthday = this.getBirthday.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleValidSignup = this.handleValidSignup.bind(this);
+    this.handleValidEdit = this.handleValidEdit.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
   }
 
@@ -264,32 +265,31 @@ class Profile extends Component {
 
   handleSubmit(e) {
     // validate input first
-    // if (this.state.clickSubmitOnce === false) {
-    //   this.setState({clickSubmitOnce: true});
-    //   console.log("Handling submit.");
-    //   this.handleValidSignup();
-    // } else {
-    //   this.setState({clickSubmitOnce: false});
-    //   console.log("Huli! Ba't ba 'to nagdo-double respond?!");
-    // }
-    // console.log("Handling submit without form validation");
-    this.handleValidSignup();
+    // after validations
 
-    // alert( "Thank you for signing up!" );
+    alert('Submit clicked!');
 
-    // this.props.history.push("/"); // go back to user home after edit 
+    if(this.props.newAccount) {
+      console.log("Invoking handleValidCreateNewAccount()");
+      alert("Invoking handleValidCreateNewAccount()");
+      this.handleValidCreateNewAccount();
+    } else {
+      console.log("Handling edit.");
+      alert("Handling edit.");
+      this.handleValidEdit();
+    }
 
-    if(localStorage.getItem("isAdmin") === false ) {
-      // if the user is not an admin
-      // this.props.showProfile(); // redirect to the profile page
 
-      this.props.history.push('/user/profile');
+    if (this.props.alertMessage) {
+      alert(this.props.alertMessage);
+    } else {
+      // alert( "Thank you for signing up!" );
     }
   }
 
-  handleValidSignup = async e => {
+  handleValidEdit = async e => {
     // e.preventDefault();
-    const response = await fetch('/signup3', {
+    const response = await fetch('/admin-edit-user-profile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -314,35 +314,71 @@ class Profile extends Component {
     this.setState({authenticated: true});
     
     alert(body);
+  }
+
+  handleValidCreateNewAccount = async e => {
+    // e.preventDefault();
+    const response = await fetch('/admin-create-new-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify({
+      //   firstname: this.state.fistName,
+      //   lastname: this.state.lastName,
+      //   username: this.state.username,
+      //   email: this.state.email,
+      //   password: this.state.password
+      // }),
+      body: JSON.stringify({
+        data: this.state
+      })
+    });
+    const body = await response.text();
+    // get the response object
+    this.setState({ message: body }); // get as JSON object
+    this.setState({ success: true });
+
+    localStorage.setItem("authenticated", true);
+    this.setState({authenticated: true});
+    
+    alert("Server response: " + body);
 
   }
 
   componentDidMount() {
-    console.log("Profile did mount.");
-    this.getUserInfo();
+    // if editing an existing account
 
-    localStorage.removeItem("asAdmin"); 
+    if(this.props.userid) { // if a userid prop is passed
+      console.log("Editing the user from props with userid: " + this.props.userid);
+      this.setState({ userid: this.props.userid });
+      this.getUserInfo();
+    } else { // no userid pass
+      // means creating an new account
+      // let the states be blank
+      console.log("No userid was passed as a prop so this means that the Application is going to create a new account.");
+    }
   }
 
   getUserInfo = async e => {
-    const response = await fetch('/get-user-via-username', {
+    const response = await fetch('/get-user-via-userid', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: localStorage.getItem("username")
+        userid: this.props.userid // this has been established
       })
     });
     
     const body = await response.text();
 
     // get the response object
-    this.setState({ user: JSON.parse(body) }); // get as JSON object
+    // this.setState({ user: JSON.parse(body) }); // get as JSON object
 
     const userInfo = JSON.parse(body)[0];
 
-    console.log(userInfo);
+    // console.log("ApplicationForm > componentDidMount > getUserInfo > userInfo: " + JSON.stringify(userInfo));
 
     // alert(body);
     // alert( "Attempted to get user info of " + localStorage.getItem("username"));
@@ -383,19 +419,16 @@ class Profile extends Component {
     this.setState({ contactpersoncontactnumber: userInfo.contact_person_contact_number });
     this.setState({ contactpersonaddress: userInfo.contact_person_address });
     this.setState({ brieflyexplainyourreason: userInfo.reason });
-    
-    
-    console.log("state birthday: " + this.state.birtday)
-    console.log("this.state.date: " + this.state.date);
 
+    console.log("useriInfo.birth_date: " + userInfo.birth_date);
 
     if(this.state.birthday === null || this.state.birthday === undefined || this.state.birthday === '') {
       var nobirthdate = new Date();
-      nobirthdate.setMonth(0);
-      nobirthdate.setDate(1);
-      nobirthdate.setFullYear(2000);
-      this.setState({ date: nobirthdate });        
-      console.log("state birthday: " + this.state.birtday)
+      // nobirthdate.setMonth(0);
+      // nobirthdate.setDate(1);
+      // nobirthdate.setFullYear(2000);
+      this.setState({ date: nobirthdate });
+      console.log("state birthday: " + this.state.birtday);
       console.log("this.state.date: " + this.state.date);
     } else {
       var parsedDate = this.state.birthday.split('/');
@@ -410,7 +443,6 @@ class Profile extends Component {
       console.log("state birthday: " + this.state.birtday)
       console.log("this.state.date: " + this.state.date);
     }
-    
   }
 
   render() {
@@ -418,40 +450,38 @@ class Profile extends Component {
     	// opening delimiter div tag
       <div>
 
-        <Navbar history={this.props.history}/>
 
-        {/* this is how to include the sidebar */}
-        <div className="ui grid">
-          <div className="three wide column">
-            {/* <div className="row"><br/></div> */}
-            {/* </br> */}
-            <div className="row">
-              <Sidebar {...this.props} asAdmin={false} showProfile={true} /> {/** this is the side bar */}
-            </div>
-          </div>
-          <div className="eleven wide column">    {/** this is where the USER Page contents should be declared */}
-
-
-            <div className="ui segment">
-              { this.state.success ? ( 
-                <div className="ui message">
-                  {/* <i className="close icon"></i> */}
-                  <div className="header">
-                    Your user registration was successful.
-                  </div>
-                  <p>You may now log-in with the username you have chosen</p>
-                  <p>{this.state.message}</p>
-                </div>
-              ): (null) }
-
-              <div className="ui column centered grid segment">
+              <div className="ui ten wide column centered grid">
                 <div className="row">
-                  <h2>Volunteer Application</h2>
+                  {
+                    this.props.heading ? 
+                    (<div><h2>{this.props.heading}</h2></div>)
+                    : (<h2>Volunteer Profile</h2>)
+                  }
+                  
                 </div>
                 
                 <form className="ui form" onSubmit={this.handleSubmit}>
                 <div className="ui column centered grid ">
                     <h4 className="ui dividing header row">Personal Information</h4>
+
+                    <div className="fields row">
+                      <div className="field">
+                        <label>Username</label>
+                        <input type="text" placeholder="Username"
+                        defaultValue={this.state.username}
+                        onChange={this.handleChangeUsername}
+                        />
+                      </div>
+                      <div className="field">
+                        <label>Password
+                        </label>
+                        <input type="text" placeholder="Password"
+                        defaultValue={this.state.password}
+                        onChange={this.handleChangePassword}
+                        />
+                      </div>
+                    </div>
 
                     <div className="fields row">
                       <div className="field">
@@ -693,7 +723,7 @@ class Profile extends Component {
                         <label>Contact number</label>
                         <input type="text" placeholder="Contact number"
                         defaultValue={this.state.beneficiarycontactnumber}
-                        onChange={this.handleChangeContactPersonContactNumber}
+                        onChange={this.handleChangeBeneficiaryContactNumber}
                         />
                       </div>
                     </div>
@@ -758,13 +788,9 @@ class Profile extends Component {
                 </div></form>
               </div>
 
-            </div>
-
-          </div>
-        </div>
 	    </div> // closing delimiter div tag
     );
   }
 }
 
-export default Profile;
+export default ApplicationForm;

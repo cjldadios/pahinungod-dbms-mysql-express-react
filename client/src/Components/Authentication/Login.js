@@ -205,6 +205,9 @@ class Login extends Component {
                     <div className="ui stacked secondary  segment">
                       <button className="ui fluid large teal submit button" onClick={this.handleLogout}>Logout</button>
                     </div>
+                    <div>
+                      <a href="/user/activity">Continue</a>
+                    </div>
                   </div>
                 </div>
               )}
