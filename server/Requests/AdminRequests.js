@@ -50,6 +50,28 @@ router.post('/get-activity', (req, res) => {
 });
 
 
+router.post('/get-activity-data', (req, res) => {
+  console.log('Received a POST request at /get-activity-data route');
+  // console.log(req.body);
+  const { activityid } = req.body; // aliasing
+
+  var statement = `SELECT * FROM activity WHERE activityId='${(activityid)}'`;
+ 
+  console.log("Query: " + statement);
+  connection.query(statement, (err, results) => {
+    // console.log(results);
+
+    if(err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      console.log("query success :)");
+      console.log(results);
+      res.send(results);
+    }
+  })  
+});
+
 router.post('/get-user-via-userid', (req, res) => {
   const { userid } = req.body;
 
@@ -513,6 +535,58 @@ router.post('/admin-add-activity', (req, res) => {
   })  
 });
 
+// add activity request handler
+router.post('/admin-edit-activity', (req, res) => {
+  console.log("");
+  console.log('Here at /admin-edit-activity');
+  
+  console.log("request body.data: " + req.body.data);
+  const { 
+    activityid,
+    activityname,
+    description,
+    startdate,
+    enddate,
+    noofvolunteers,
+    participants,
+    coordinatorincharge,
+    userid
+  } = req.body.data; // aliasing
+
+  console.log("Query: " + 
+    query.EDIT_ACTIVITY(
+      activityid,
+      activityname,
+      description,
+      startdate,
+      enddate,
+      noofvolunteers,
+      participants,
+      coordinatorincharge,
+      userid
+    )
+  );
+  
+  connection.query(query.EDIT_ACTIVITY(
+    activityid,
+    activityname,
+    description,
+    startdate,
+    enddate,
+    noofvolunteers,
+    participants,
+    coordinatorincharge,
+    userid
+  ), (err, results) => {
+    if(err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      console.log('Profile updated successfully.');
+      res.send('Profile updated successfully.');
+    }
+  })  
+});
 
 
 module.exports = router;

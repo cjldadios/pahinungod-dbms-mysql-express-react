@@ -49,7 +49,7 @@ class ManageActivities extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: 'getting all the activities'
+        message: 'fetching all activities for Manage Activities view'
       })
     });
     const body = await response.text();
@@ -72,11 +72,16 @@ class ManageActivities extends Component {
   }
 
   handleEditActivity(e) {
+    // console.log("Invoked handleEditActivity()");
+    // console.log("setting state tempActivityId as: " + e.target.value);
+    this.setState({ tempActivityId: e.target.value });
+    // console.log("Setting displayViewActivities as false");
     this.setState({ displayViewActivities: false });
     this.setState({ displayAddParticipants: false });
-    this.setState({ displayEditActivity: true });
     this.setState({ displayAddActivity: false });
-    this.setState({ tempActivityId: e.target.value });
+    // console.log("Setting displayEditActivity as true");
+    this.setState({ displayEditActivity: true });
+    // alert("Wait.");
   }
   
   render() {
@@ -188,8 +193,7 @@ class ManageActivities extends Component {
                       this.state.displayEditActivity ?
                       (
                         <div>
-                          <ActivityForm activityid={this.state.tempActivityId}/>
-                          />
+                          <ActivityForm new={false} activityid={this.state.tempActivityId} />
                         </div>
                       ) : (
                         this.state.displayAddActivity ? (

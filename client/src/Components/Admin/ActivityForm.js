@@ -9,13 +9,17 @@ class ActivityForm extends Component {
   constructor(props){
     super(props);
 
+    this.handleChange = this.handleChange.bind(this);
     this.genericHandleChange = this.genericHandleChange.bind(this); // generic item change handler
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeStartdate = this.handleChangeStartdate.bind(this);
     this.handleChangeEnddate = this.handleChangeEnddate.bind(this);
     this.getActivityData = this.getActivityData.bind(this);
+    this.handleChangeNoofvolunteers = this.handleChangeNoofvolunteers.bind(this);
 
     this.createNewActivityRequest = this.createNewActivityRequest.bind(this);
+    this.editActivityRequest = this.editActivityRequest.bind(this);
 
     this.state = {
       activityid: '',
@@ -23,7 +27,7 @@ class ActivityForm extends Component {
       description: '',
       startdate: '',
       enddate: '',
-      noofvolunteers: '',
+      noofvolunteers: 0, // must be initialized as an int to be react at the input
       participants: '',
       coordinatorincharge: '',
       userid: '',
@@ -36,8 +40,13 @@ class ActivityForm extends Component {
 
   }
 
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
   // genericHandleChange = (e, { value }) => this.setState({ value });
   genericHandleChange(e) {
+    console.log("changing state [" + e.target.name + "] to [" + e.target.value + "]");
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -61,15 +70,20 @@ class ActivityForm extends Component {
     this.setState({ enddate: dateFormatted});
   }
 
+  handleChangeNoofvolunteers(e) {
+    this.setState({ noofvolunteers: e.target.value });
+    console.log("vol count: " + e.target.value);
+  }
+
   handleSubmit(e) {
     // validate input here
-    alert("input not validated");
+    // alert("input not validated");
 
     if(this.props.new) {
       console.log("Creating a new activity");
       this.createNewActivityRequest();
     } else {
-      // this.handleValidSignup();
+      this.editActivityRequest();
     }
 
     if (this.props.alertMessage) {
@@ -84,17 +98,6 @@ class ActivityForm extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      // body: JSON.stringify({
-      //   activityid: this.state.activityid,
-      //   activityname: this.state.activityname,
-      //   description: this.state.description,
-      //   startdate: this.state.startdate,
-      //   enddate: this.state.enddate,
-      //   noofvolunteers: this.state.noofvolunteers,
-      //   participants: this.state.participants,
-      //   coordinatorincharge: this.state.coordinatorincharge,
-      //   userid: this.state.userid,
-      // }),
       body: JSON.stringify({
         data: this.state,
       }),
@@ -103,46 +106,30 @@ class ActivityForm extends Component {
     // get the response object
     this.setState({ message: body }); // get as JSON object
     this.setState({ success: true });
-
-    localStorage.setItem("authenticated", true);
-    this.setState({authenticated: true});
-    
     alert(body);
   }
 
-  handleValidCreateNewAccount = async e => {
-    // e.preventDefault();
-    const response = await fetch('/admin-create-new-user', {
+  editActivityRequest = async e => {
+    const response = await fetch('/admin-edit-activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      // body: JSON.stringify({
-      //   firstname: this.state.fistName,
-      //   lastname: this.state.lastName,
-      //   username: this.state.username,
-      //   email: this.state.email,
-      //   password: this.state.password
-      // }),
       body: JSON.stringify({
-        data: this.state
-      })
+        data: this.state,
+      }),
     });
     const body = await response.text();
     // get the response object
-    this.setState({ message: body }); // get as JSON object
-    this.setState({ success: true });
-
-    localStorage.setItem("authenticated", true);
-    this.setState({authenticated: true});
-    
-    alert("Server response: " + body);
-
+    this.setState({ message: body });
+    alert(body);
   }
-
   
   // this method is invoked by the componentDidMount method to set this component's state
   getActivityData = async e => {
+    // console.log("Here at getActivityData");
+    // console.log("Requesting Activity data by passing to 'body' parameters 'activityid' of 'this.props.activityid'");
+
     const response = await fetch('/get-activity-data', {
       method: 'POST',
       headers: {
@@ -159,46 +146,106 @@ class ActivityForm extends Component {
     // this.setState({ user: JSON.parse(body) }); // get as JSON object
 
     const activityData = JSON.parse(body)[0];
+    // console.log("Response: " + JSON.stringify(activityData));
 
-    console.log("ActivityForm... " + JSON.stringify(activityData));
+    // console.log("activityData.noofvolunteers 1: " + activityData.noofvolunteers);
 
-    // this.setState({ username: userInfo.username });
-    // this.setState({ email: userInfo.email });
+    this.setState({ activityid: activityData.activityId }); // or this,props.activityid
+    this.setState({ activityname: activityData.activityname });
+    this.setState({ description: activityData.description });
+    this.setState({ startdate: activityData.startdate });
+    this.setState({ enddate: activityData.enddate });
+    this.setState({ noofvolunteers: activityData.noOfVolunteers });
+    this.setState({ participants: activityData.participants });
+    this.setState({ coordinatorincharge: activityData.coordinatorincharge });
 
-    // if(this.state.birthday === null || this.state.birthday === undefined || this.state.birthday === '') {
-    //   var nobirthdate = new Date();
-    //   nobirthdate.setMonth(0);
-    //   nobirthdate.setDate(1);
-    //   nobirthdate.setFullYear(2000);
-    //   this.setState({ date: nobirthdate });        
-    //   console.log("state birthday: " + this.state.birtday)
-    //   console.log("this.state.date: " + this.state.date);
-    // } else {
-    //   var parsedDate = this.state.birthday.split('/');
-    //   var birthdate = new Date();
-    //   console.log("parsedDate[0]: " + parsedDate[0])
-    //   console.log("parsedDate[1]: " + parsedDate[1])
-    //   console.log("parsedDate[2]: " + parsedDate[2])
-    //   birthdate.setMonth(parsedDate[0] - 1);
-    //   birthdate.setDate(parsedDate[1]);
-    //   birthdate.setFullYear(parsedDate[2]);
-    //   this.setState({ date: birthdate });
-    //   console.log("state birthday: " + this.state.birtday)
-    //   console.log("this.state.date: " + this.state.date);
-    // }
+    // setting up startdate and startdateObject
+    if(this.state.startdate === null || this.state.startdate === undefined || this.state.startdate === '') {
+      console.log("Undefined startdate!");
+      // var nodate = new Date();
+      // nodate.setMonth(0);
+      // nodate.setDate(1);
+      // nodate.setFullYear(2000);
+      // this.setState({ startdateObject: nodate });  // the default is 01/01/2000
+      // but let the default be blank
+      console.log("this.state.startdate: " + this.state.startdate);
+      this.setState({ startdate: "0000-00-00" });
+      console.log("this.state.startdate: " + this.state.startdate);
+    } else {
+      console.log("this.state.startdate: " + this.state.startdate);
+      var parsedDate = this.state.startdate.split('-'); // this wouldn't work, because its format is like this 2019-03-02T16:00:00.000Z
+      
+      var newdate = new Date();
+      console.log("parsedDate[0]: " + parsedDate[0]); // year
+      console.log("parsedDate[1]: " + parsedDate[1]); // month
+      console.log("parsedDate[2]: " + parsedDate[2]); // day but...
+      // ...the day has some trailing characters
+      // so parse the leading int which is the date
+      var daydate = parseInt(parsedDate[2]);
+      console.log("parseInt(parsedDate[2]): " + daydate); // trailing characters
+      newdate.setMonth(parsedDate[1]);
+      newdate.setDate(daydate + 1);
+      newdate.setFullYear(parsedDate[0]);
+      this.setState({ startdateObject: newdate });
+      console.log("this.state.startdate: " + this.state.startdate);
+      this.setState({ startdateObject: newdate });
+    }
+
+    // setting up enddate and enddateObject
+    if(this.state.enddate === null || this.state.enddate === undefined || this.state.enddate === '') {
+      console.log("Undefined enddate!");
+      console.log("this.state.enddate: " + this.state.enddate);
+      this.setState({ enddate: "0000-00-00" });
+      console.log("this.state.enddate: " + this.state.enddate);
+    } else {
+      console.log("this.state.enddate: " + this.state.enddate);
+      var parsedEnddate = this.state.enddate.split('-'); // this wouldn't work, because its format is like this 2019-03-02T16:00:00.000Z
+      
+      var newEnddate = new Date();
+      console.log("parsedEnddate[0]: " + parsedEnddate[0]); // year
+      console.log("parsedEnddate[1]: " + parsedEnddate[1]); // month
+      console.log("parsedEnddate[2]: " + parsedEnddate[2]); // day but...
+      // ...the day has some trailing characters
+      // so parse the leading int which is the date
+      var daydate = parseInt(parsedEnddate[2]);
+      console.log("parseInt(parsedEnddate[2]): " + daydate); // trailing characters
+      newEnddate.setMonth(parsedEnddate[1]);
+      newEnddate.setDate(daydate + 1);
+      newEnddate.setFullYear(parsedEnddate[0]);
+      this.setState({ enddateObject: newEnddate });
+      console.log("this.state.enddate: " + this.state.enddate);
+      this.setState({ enddateObject: newEnddate });
+
+    }
   }
 
   componentDidMount() {
     // if editing an existing account
+    // console.log("Invoked componentDidMount()");
 
-    if(this.props.userid) { // if a userid prop is passed
-      console.log("Editing the user from props with userid: " + this.props.userid);
-      this.setState({ userid: this.props.userid });
-      this.getActivityData();
-    } else { // no userid pass
+    // console.log("this.props.activityid: " + this.props.activityid);
+    // console.log("this.props.activityid === undefined:" + this.props.activityid === undefined);
+    // console.log("this.props.activityid === 'undefined':" + this.props.activityid === 'undefined');
+    // console.log("this.props.activityid === true: " + this.props.activityid === true);
+    // console.log("this.props.activityid === null: " + this.props.activityid === null);
+    
+    // console.log("this.props.new:" + this.props.new);
+
+    // console.log("Add new activity?");
+    if(this.props.new) { // true
+      // console.log("Creating new activity.");
+
       // means creating an new account
       // let the states be blank
-      console.log("No userid was passed as a prop so this means that the Application is going to create a new account.");
+      // console.log("The passed prop 'new' is 'true' so this means that the Application is going to create a new account.");
+
+    } else {
+      // console.log("Editing actvity...getting activity data.");
+      
+      // console.log("Editing the 'activity', from props, with activiyid: " + this.props.activiyid);
+      this.setState({ userid: this.props.activiyid });
+      // console.log("Calling getActivityData()");
+      this.getActivityData();
     }
   }
 
@@ -236,7 +283,7 @@ class ActivityForm extends Component {
           </div>
           <div className="four wide field">
             <label>Number of Volunteers</label>
-            <input type="number" name="numberofvolunteers" placeholder="Number of Volunteers" defaultValue={this.state.numberofvolunteers} onChange={this.genericHandleChange} />
+            <input type="number" min="0" placeholder="Number of Volunteers" value={this.state.noofvolunteers} onChange={this.handleChangeNoofvolunteers} />
           </div>
           <div className="field">
             <label>Participants</label>

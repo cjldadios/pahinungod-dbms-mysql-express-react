@@ -246,5 +246,29 @@ exports.ADD_ACTIVITY = function (
   `;
 };
 
-// TO_DATE('${startdate}', 'MM/DD/YYYY'),
-//       TO_DATE('${enddate}', 'MM/DD/YYYY'),
+exports.EDIT_ACTIVITY = function (
+    activityid,
+    activityname,
+    description,
+    startdate,
+    enddate,
+    noofvolunteers,
+    participants,
+    coordinatorincharge,
+    userid
+) {
+  return `
+    UPDATE activity 
+    SET
+      \`activityId\` = '${activityid}',
+      \`activityname\` = '${activityname}',
+      \`description\` = '${description}',
+      \`startdate\` = '${startdate}', 
+      \`enddate\` = '${enddate}',
+      \`noOfVolunteers\` = '${noofvolunteers}', 
+      \`participants\` = '${participants}', 
+      \`coordinatorincharge\` = '${coordinatorincharge}',
+      \`userId\` = '${userid}'
+    WHERE \`activityId\` = '${activityid}'
+  `;
+};
