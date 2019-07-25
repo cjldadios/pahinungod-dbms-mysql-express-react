@@ -206,3 +206,45 @@ exports.ADD_USER = function (
     )
   `;
 };
+
+
+
+exports.ADD_ACTIVITY = function (
+  // activityId,
+  activityname,
+  description,
+  startdate,
+  enddate,
+  noOfVolunteers,
+  participants,
+  coordinatorincharge,
+  userId
+) {
+  return `
+    INSERT INTO activity 
+    (
+      
+      \`activityname\`,
+      \`description\`,
+      \`startdate\`,
+      \`enddate\`,
+      \`noOfVolunteers\`,
+      \`participants\`,
+      \`coordinatorincharge\`,
+      \`userId\`
+    ) VALUES (
+      
+      '${activityname}',
+      '${description}',
+      '${startdate}',
+      '${enddate}',
+      '${noOfVolunteers}',
+      '${participants}',
+      '${coordinatorincharge}',
+      '${userId}'
+    )
+  `;
+};
+
+// TO_DATE('${startdate}', 'MM/DD/YYYY'),
+//       TO_DATE('${enddate}', 'MM/DD/YYYY'),

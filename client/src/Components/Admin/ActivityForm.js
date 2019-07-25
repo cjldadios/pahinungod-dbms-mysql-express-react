@@ -13,6 +13,9 @@ class ActivityForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeStartdate = this.handleChangeStartdate.bind(this);
     this.handleChangeEnddate = this.handleChangeEnddate.bind(this);
+    this.getActivityData = this.getActivityData.bind(this);
+
+    this.createNewActivityRequest = this.createNewActivityRequest.bind(this);
 
     this.state = {
       activityid: '',
@@ -20,12 +23,15 @@ class ActivityForm extends Component {
       description: '',
       startdate: '',
       enddate: '',
-      startdateObject: '',
-      enddateObject: '',
       noofvolunteers: '',
       participants: '',
       coordinatorincharge: '',
       userid: '',
+
+      startdateObject: '',
+      enddateObject: '',
+      startdateFormatted: '',
+      enddateFormatted: '',
     }
 
   }
@@ -37,28 +43,33 @@ class ActivityForm extends Component {
 
   handleChangeStartdate(date) {
     this.setState({ startdateObject: date });
-    console.log("date: " + date);
-    var dateString = (date.getMonth() + 1 ) + '/' + date.getDate() + '/' + date.getFullYear();
-    console.log("dateString: " + dateString);
-    this.setState({ startdate: dateString});
+    // console.log("date: " + date);
+    // var dateString = (date.getMonth() + 1 ) + '/' + date.getDate() + '/' + date.getFullYear();
+    // console.log("dateString: " + dateString);
+    // this.setState({ startdate: dateString});
+    var dateFormatted = date.getFullYear() + '-' + date.getMonth() + '-' +date.getDate();
+    this.setState({ startdate: dateFormatted});
   }
 
   handleChangeEnddate(date) {
     this.setState({ enddateObject: date });
-    console.log("date: " + date);
-    var dateString = (date.getMonth() + 1 ) + '/' + date.getDate() + '/' + date.getFullYear();
-    console.log("dateString: " + dateString);
-    this.setState({ enddate: dateString});
+    // console.log("date: " + date);
+    // var dateString = (date.getMonth() + 1 ) + '/' + date.getDate() + '/' + date.getFullYear();
+    // console.log("dateString: " + dateString);
+    // this.setState({ enddate: dateString});
+    var dateFormatted = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();      
+    this.setState({ enddate: dateFormatted});
   }
 
   handleSubmit(e) {
     // validate input here
+    alert("input not validated");
 
-    if(this.props.newActivity) {
+    if(this.props.new) {
       console.log("Creating a new activity");
-      this.handleValidCreateNewActivity();
+      this.createNewActivityRequest();
     } else {
-      this.handleValidSignup();
+      // this.handleValidSignup();
     }
 
     if (this.props.alertMessage) {
@@ -66,6 +77,38 @@ class ActivityForm extends Component {
     }
   }
 
+  createNewActivityRequest = async e => {
+    alert("Create new activity request");    
+    const response = await fetch('/admin-add-activity', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify({
+      //   activityid: this.state.activityid,
+      //   activityname: this.state.activityname,
+      //   description: this.state.description,
+      //   startdate: this.state.startdate,
+      //   enddate: this.state.enddate,
+      //   noofvolunteers: this.state.noofvolunteers,
+      //   participants: this.state.participants,
+      //   coordinatorincharge: this.state.coordinatorincharge,
+      //   userid: this.state.userid,
+      // }),
+      body: JSON.stringify({
+        data: this.state,
+      }),
+    });
+    const body = await response.text();
+    // get the response object
+    this.setState({ message: body }); // get as JSON object
+    this.setState({ success: true });
+
+    localStorage.setItem("authenticated", true);
+    this.setState({authenticated: true});
+    
+    alert(body);
+  }
 
   handleValidCreateNewAccount = async e => {
     // e.preventDefault();
@@ -99,14 +142,14 @@ class ActivityForm extends Component {
 
   
   // this method is invoked by the componentDidMount method to set this component's state
-  getUserInfo = async e => {
-    const response = await fetch('/get-user-via-userid', {
+  getActivityData = async e => {
+    const response = await fetch('/get-activity-data', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userid: this.props.userid // this has been established
+        activityid: this.props.activityid // this has been established
       })
     });
     
@@ -115,34 +158,34 @@ class ActivityForm extends Component {
     // get the response object
     // this.setState({ user: JSON.parse(body) }); // get as JSON object
 
-    const userInfo = JSON.parse(body)[0];
+    const activityData = JSON.parse(body)[0];
 
-    console.log("ActivityForm... " + userInfo);
+    console.log("ActivityForm... " + JSON.stringify(activityData));
 
-    this.setState({ username: userInfo.username });
-    this.setState({ email: userInfo.email });
+    // this.setState({ username: userInfo.username });
+    // this.setState({ email: userInfo.email });
 
-    if(this.state.birthday === null || this.state.birthday === undefined || this.state.birthday === '') {
-      var nobirthdate = new Date();
-      nobirthdate.setMonth(0);
-      nobirthdate.setDate(1);
-      nobirthdate.setFullYear(2000);
-      this.setState({ date: nobirthdate });        
-      console.log("state birthday: " + this.state.birtday)
-      console.log("this.state.date: " + this.state.date);
-    } else {
-      var parsedDate = this.state.birthday.split('/');
-      var birthdate = new Date();
-      console.log("parsedDate[0]: " + parsedDate[0])
-      console.log("parsedDate[1]: " + parsedDate[1])
-      console.log("parsedDate[2]: " + parsedDate[2])
-      birthdate.setMonth(parsedDate[0] - 1);
-      birthdate.setDate(parsedDate[1]);
-      birthdate.setFullYear(parsedDate[2]);
-      this.setState({ date: birthdate });
-      console.log("state birthday: " + this.state.birtday)
-      console.log("this.state.date: " + this.state.date);
-    }
+    // if(this.state.birthday === null || this.state.birthday === undefined || this.state.birthday === '') {
+    //   var nobirthdate = new Date();
+    //   nobirthdate.setMonth(0);
+    //   nobirthdate.setDate(1);
+    //   nobirthdate.setFullYear(2000);
+    //   this.setState({ date: nobirthdate });        
+    //   console.log("state birthday: " + this.state.birtday)
+    //   console.log("this.state.date: " + this.state.date);
+    // } else {
+    //   var parsedDate = this.state.birthday.split('/');
+    //   var birthdate = new Date();
+    //   console.log("parsedDate[0]: " + parsedDate[0])
+    //   console.log("parsedDate[1]: " + parsedDate[1])
+    //   console.log("parsedDate[2]: " + parsedDate[2])
+    //   birthdate.setMonth(parsedDate[0] - 1);
+    //   birthdate.setDate(parsedDate[1]);
+    //   birthdate.setFullYear(parsedDate[2]);
+    //   this.setState({ date: birthdate });
+    //   console.log("state birthday: " + this.state.birtday)
+    //   console.log("this.state.date: " + this.state.date);
+    // }
   }
 
   componentDidMount() {
@@ -151,7 +194,7 @@ class ActivityForm extends Component {
     if(this.props.userid) { // if a userid prop is passed
       console.log("Editing the user from props with userid: " + this.props.userid);
       this.setState({ userid: this.props.userid });
-      this.getUserInfo();
+      this.getActivityData();
     } else { // no userid pass
       // means creating an new account
       // let the states be blank
@@ -193,7 +236,7 @@ class ActivityForm extends Component {
           </div>
           <div className="four wide field">
             <label>Number of Volunteers</label>
-            <input type="number" name="description" placeholder="Number of Volunteers" defaultValue={this.state.description} onChange={this.genericHandleChange} />
+            <input type="number" name="numberofvolunteers" placeholder="Number of Volunteers" defaultValue={this.state.numberofvolunteers} onChange={this.genericHandleChange} />
           </div>
           <div className="field">
             <label>Participants</label>

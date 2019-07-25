@@ -11,18 +11,20 @@ class ManageActivities extends Component {
     this.state = {
       authenticated: localStorage.getItem("authenticated"),
       
-      displayViewActivities: false, // this should be the default true
+      displayViewActivities: true, // this should be the default true
       displayAddParticipants: false,
       displayEditActivity: false,
-      displayAddActivity: true,
+      displayAddActivity: false,
 
       activityCount: 0,
       activityArray: [],
+      tempActivityId: '',
     };
 
     this.getAllActivities = this.getAllActivities.bind(this);
     this.handleViewActivities = this.handleViewActivities.bind(this);
     this.handleAddActivity = this.handleAddActivity.bind(this);
+    this.handleEditActivity = this.handleEditActivity.bind(this);
   }
 
   componentDidMount() {
@@ -67,6 +69,14 @@ class ManageActivities extends Component {
     this.setState({ displayAddParticipants: false });
     this.setState({ displayEditActivity: false });
     this.setState({ displayAddActivity: true });
+  }
+
+  handleEditActivity(e) {
+    this.setState({ displayViewActivities: false });
+    this.setState({ displayAddParticipants: false });
+    this.setState({ displayEditActivity: true });
+    this.setState({ displayAddActivity: false });
+    this.setState({ tempActivityId: e.target.value });
   }
   
   render() {
@@ -128,7 +138,7 @@ class ManageActivities extends Component {
                               </div>
                               <div className="item">
                                 <div className="ui icon input">
-                                  <input type="text" placeholder="Search..."/>
+                                  <input type="text" placeholder="Ctrl + F"/>
                                   <i className="search link icon"></i>
                                 </div>
                               </div>
@@ -143,6 +153,7 @@ class ManageActivities extends Component {
                                 <th>Activity ID</th>
                                 <th>Name</th> 
                                 <th>Start Date</th>
+                                <th>End Date</th>
                                 <th>Participants</th>
                                 <th>Coordinator-in-charge</th>
                                 <th>
@@ -157,12 +168,13 @@ class ManageActivities extends Component {
                                     <td>{activity.activityId}</td>
                                     <td>{activity.activityname}</td>
                                     <td>{activity.startdate}</td>
+                                    <td>{activity.enddate}</td>
                                     <td>{activity.participants}</td>
                                     <td>{activity.coordinatorincharge}</td>
                                     <td>
                                       <strong>Edit: </strong><br/>
-                                      <button value={activity.activityId} onClick={this.handleEditUser} >Details</button>
-                                      <button value={activity.activityId} onClick={this.handleEditUser} >Volunteers</button>
+                                      <button value={activity.activityId} onClick={this.handleEditActivity} >Details</button>
+                                      <button value={activity.activityId} onClick={this.handleEditActivity} >Volunteers</button>
                                     </td>
                                   </tr>
                                 ) 
@@ -176,15 +188,14 @@ class ManageActivities extends Component {
                       this.state.displayEditActivity ?
                       (
                         <div>
-                          <br/>
-                          {/* <ManageProfile userid={this.state.tempUserIdForFetching}  heading="Editing Volunteer Profile"  */}
+                          <ActivityForm activityid={this.state.tempActivityId}/>
                           />
                         </div>
                       ) : (
                         this.state.displayAddActivity ? (
                           // here rendered is a create activity form
                           <div>
-                            <ActivityForm />
+                            <ActivityForm new={true} />
                           </div>
                         ) : (
                           <div>

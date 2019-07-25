@@ -462,6 +462,58 @@ router.post('/admin-edit-user-profile', (req, res) => {
   })  
 });
 
+// add activity request handler
+router.post('/admin-add-activity', (req, res) => {
+  console.log("");
+  console.log('Here at /admin-add-activity');
+  
+  console.log("request body.data: " + req.body.data);
+  const { 
+    activityid,
+    activityname,
+    description,
+    startdate,
+    enddate,
+    noofvolunteers,
+    participants,
+    coordinatorincharge,
+    userid
+  } = req.body.data; // aliasing
+
+  console.log("Query: " + query.ADD_ACTIVITY(
+    //activityid,
+    activityname,
+    description,
+    startdate,
+    enddate,
+    noofvolunteers,
+    participants,
+    coordinatorincharge,
+    userid
+  )
+  );
+  
+  connection.query(query.ADD_ACTIVITY(
+    //activityid,
+    activityname,
+    description,
+    startdate,
+    enddate,
+    noofvolunteers,
+    participants,
+    coordinatorincharge,
+    userid
+  ), (err, results) => {
+    if(err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      res.send('Profile updated successfully.');
+    }
+  })  
+});
+
+
 
 module.exports = router;
 
