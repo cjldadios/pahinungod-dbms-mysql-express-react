@@ -181,7 +181,7 @@ class ActivityForm extends Component {
       console.log("parsedDate[2]: " + parsedDate[2]); // day but...
       // ...the day has some trailing characters
       // so parse the leading int which is the date
-      var daydate = parseInt(parsedDate[2]);
+      var daydate = parseInt(parsedDate[2], 10); // 10 for base 10
       console.log("parseInt(parsedDate[2]): " + daydate); // trailing characters
       newdate.setMonth(parsedDate[1]);
       newdate.setDate(daydate + 1);
@@ -207,10 +207,10 @@ class ActivityForm extends Component {
       console.log("parsedEnddate[2]: " + parsedEnddate[2]); // day but...
       // ...the day has some trailing characters
       // so parse the leading int which is the date
-      var daydate = parseInt(parsedEnddate[2]);
-      console.log("parseInt(parsedEnddate[2]): " + daydate); // trailing characters
+      var enddateDay = parseInt(parsedEnddate[2], 10); // base 10
+      console.log("parseInt(parsedEnddate[2]): " + enddateDay); // trailing characters
       newEnddate.setMonth(parsedEnddate[1]);
-      newEnddate.setDate(daydate + 1);
+      newEnddate.setDate(enddateDay + 1);
       newEnddate.setFullYear(parsedEnddate[0]);
       this.setState({ enddateObject: newEnddate });
       console.log("this.state.enddate: " + this.state.enddate);

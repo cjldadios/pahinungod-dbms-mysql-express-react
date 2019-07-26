@@ -139,7 +139,7 @@ class ManageActivities extends Component {
                             </a>
                             <div className="right menu">
                               <div>
-                                <div className="ui item">Total: {this.state.activityCount }</div>
+                                <div className="ui item"><label className="ui label">Total Activities: {this.state.activityCount }</label></div>
                               </div>
                               <div className="item">
                                 <div className="ui icon input">

@@ -23,6 +23,19 @@ router.post('/get-all-users', (req, res) => {
   })  
 });
 
+router.post('/get-user', (req, res) => {
+  const { userid } = req.body; // aliasing
+  console.log("");
+  console.log('Requesting info from userid: ' + userid);
+  connection.query(`SELECT * FROM user where userid='${userid}'`, (err, results) => {
+    if(err) {
+      res.send(err);
+    } else {
+      res.send(results);
+    }
+  })  
+});
+
 router.post('/get-activity', (req, res) => {
   console.log('Received a POST request at /get-activity route');
   // console.log(req.body);

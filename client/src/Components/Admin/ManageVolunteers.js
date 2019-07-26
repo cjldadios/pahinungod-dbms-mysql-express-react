@@ -3,6 +3,7 @@ import React, { Component }  from 'react';
 import Navbar from './../Navigations/Navbar';
 import Sidebar from './../Navigations/Sidebar';
 import ApplicationForm from './ApplicationForm';
+import UserActivity from './UserActivity';
 
 
 class ManageVolunteers extends Component {
@@ -18,17 +19,19 @@ class ManageVolunteers extends Component {
       usersArray: [],
       usersCount: 0,
 
-      tempUserIdForFetching: '',
+      tempUserIdForFetching: '39',
 
-      showViewVolunteer: true,
+      showViewVolunteer: false,
       showEditVolunteer: false,
       showAddVolunteer: false,
+      showManageVolunteerActivities: true
     };
 
     this.getAllUsers = this.getAllUsers.bind(this);
     this.handleEditUser = this.handleEditUser.bind(this);
     this.handleAddUser = this.handleAddUser.bind(this);
     this.handleViewUser = this.handleViewUser.bind(this);
+    this.handleManageUserActivities = this.handleManageUserActivities.bind(this);
   }
 
   handleEditUser(e) { 
@@ -38,6 +41,7 @@ class ManageVolunteers extends Component {
     this.setState({ showEditVolunteer: true });
     this.setState({ showAddVolunteer: false });
     this.setState({ showViewVolunteer: false });
+    this.setState({ showManageVolunteerActivities: false });
   }
 
   handleViewUser(e) {
@@ -45,6 +49,7 @@ class ManageVolunteers extends Component {
     this.setState({ showEditVolunteer: false });
     this.setState({ showAddVolunteer: false });
     this.setState({ showViewVolunteer: true });
+    this.setState({ showManageVolunteerActivities: false });
   }
 
   handleAddUser(e) {
@@ -52,6 +57,15 @@ class ManageVolunteers extends Component {
     this.setState({ showEditVolunteer: false });
     this.setState({ showAddVolunteer: true });
     this.setState({ showViewVolunteer: false });
+    this.setState({ showManageVolunteerActivities: false });
+  }
+
+  handleManageUserActivities(e) {
+    this.setState({ tempUserIdForFetching: e.target.value });
+    this.setState({ showEditVolunteer: false });
+    this.setState({ showAddVolunteer: false });
+    this.setState({ showViewVolunteer: false });
+    this.setState({ showManageVolunteerActivities: true });
   }
 
   componentDidMount() {
@@ -185,7 +199,7 @@ class ManageVolunteers extends Component {
                                     <td>
                                       <strong>Edit: </strong><br/>
                                       <button value={user.userid} onClick={this.handleEditUser} >Profile</button>
-                                      <button value={user.userid} onClick={this.handleEditUser} >Activities</button>
+                                      <button value={user.userid} onClick={this.handleManageUserActivities} >Activities</button>
                                     </td>
                                   </tr>
                                 ) 
@@ -212,9 +226,17 @@ class ManageVolunteers extends Component {
                             <ApplicationForm newAccount={true} heading="New Volunteer Application" alertMessage="Volunteer added successfully" />
                           </div>
                         ) : (
-                          <div>
-                            <p>Opps. Something's wrong. <a href="/user/activity">Continue</a>.</p>
-                          </div>
+                          this.state.showManageVolunteerActivities? (
+                            <div>
+                              <button onClick={this.handleViewUser} className="ui right floated negative button">Back</button>
+                              <UserActivity userid={this.state.tempUserIdForFetching} />
+                            </div>
+                          ) : (
+                            <div>
+                              <p>Opps. Something's wrong. <a href="/user/activity">Continue</a>.</p>
+                            </div>
+                          )
+                          
                         )
                       )
                     )
