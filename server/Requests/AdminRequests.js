@@ -49,11 +49,26 @@ router.post('/get-activity', (req, res) => {
     // console.log(statement)
     i++;
   }
-
   console.log("activityid: " + activityid);
   connection.query(statement, (err, results) => {
     // console.log(results);
+    if(err) {
+      res.send(err);
+    } else {
+      res.send(results);
+    }
+  })  
+});
 
+router.post('/search-activity', (req, res) => {
+  console.log("");
+  console.log('Handling request at /search-activity');
+  const { searchText } = req.body; // aliasing
+  var statement = `SELECT * FROM activity WHERE activityname LIKE '%${searchText}%'`;
+
+  console.log("Query: " + statement);
+  connection.query(statement, (err, results) => {
+    console.log(results);
     if(err) {
       res.send(err);
     } else {

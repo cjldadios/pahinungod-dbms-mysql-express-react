@@ -102,7 +102,7 @@ class ManageVolunteers extends Component {
     
     var usersCount = Object.keys(this.state.usersArray).length;
 
-    console.log("usersCount: " + usersCount);
+    // console.log("usersCount: " + usersCount);
 
     this.setState({ usersCount: usersCount });
 
