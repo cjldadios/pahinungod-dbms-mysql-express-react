@@ -60,15 +60,53 @@ router.post('/get-activity', (req, res) => {
   })  
 });
 
-router.post('/search-activity', (req, res) => {
+router.post('/search-volunteer', (req, res) => {
   console.log("");
   console.log('Handling request at /search-activity');
   const { searchText } = req.body; // aliasing
-  var statement = `SELECT * FROM activity WHERE activityname LIKE '%${searchText}%'`;
+  console.log("searchText: " + searchText);
+  var statement = `SELECT * FROM user WHERE first_name LIKE '%${searchText}%' || middle_name LIKE '%${searchText}%' || last_name LIKE '%${searchText}%'`;
+
+  // console.log("Query: " + statement);
+  connection.query(statement, (err, results) => {
+    if(err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      // console.log(results);
+      res.send(results);
+    }
+  })  
+});
+
+
+router.post('/add-user-activity', (req, res) => {
+  console.log("");
+  console.log('Handling request at /add-user-activity');
+  const { userid, activityid } = req.body; // aliasing
+  var statement = `INSERT INTO user_activity (userid, activityid) VALUES ('${userid}', '${activityid}')`;
 
   console.log("Query: " + statement);
   connection.query(statement, (err, results) => {
     console.log(results);
+    if(err) {
+      res.send(err);
+    } else {
+      res.send(results);
+    }
+  })  
+});
+
+router.post('/remove-user-activity', (req, res) => {
+  console.log("");
+  console.log('Handling request at /remove-user-activity');
+  const { userid, activityid } = req.body; // aliasing
+  var statement = `DELETE FROM user_activity WHERE userid='${userid}' && activityid='${activityid}'`;
+
+  console.log("Query: " + statement);
+  connection.query(statement, (err, results) => {
+    console.log("Reponse result: " + results);
+    console.log("Reponse error: " + err);
     if(err) {
       res.send(err);
     } else {
@@ -114,9 +152,7 @@ router.post('/get-user-via-userid', (req, res) => {
       res.send( results );         // send the results to the client
     }
   });
-
 });
-
 
 router.post('/get-all-activities', (req, res) => {
   const { message } = req.body;
@@ -131,7 +167,45 @@ router.post('/get-all-activities', (req, res) => {
       res.send( results );         // send the results to the client
     }
   });
+});
 
+router.post('/get-all-administrators', (req, res) => {
+  // const { message } = req.body;
+  connection.query( `SELECT * FROM user WHERE is_admin='1'`, (err, results) => {
+    //console.log(results);
+    if(err) {                    // if error
+      res.send(err);      // render error message      
+    }
+    else {                        // if no error
+      res.send( results );         // send the results to the client
+    }
+  });
+});
+
+router.post('/add-admin', (req, res) => {
+  const { userid } = req.body;
+  connection.query( `UPDATE user SET is_admin='1' WHERE userid='${userid}'`, (err, results) => {
+    //console.log(results);
+    if(err) {                    // if error
+      res.send(err);      // render error message      
+    }
+    else {                        // if no error
+      res.send( results );         // send the results to the client
+    }
+  });
+});
+
+router.post('/remove-admin', (req, res) => {
+  const { userid } = req.body;
+  connection.query( `UPDATE user SET is_admin='0' WHERE userid='${userid}'`, (err, results) => {
+    //console.log(results);
+    if(err) {                    // if error
+      res.send(err);      // render error message      
+    }
+    else {                        // if no error
+      res.send( results );         // send the results to the client
+    }
+  });
 });
 
 // handle request from the more complete form

@@ -19,12 +19,12 @@ class ManageVolunteers extends Component {
       usersArray: [],
       usersCount: 0,
 
-      tempUserIdForFetching: '39',
+      tempUserIdForFetching: '35',
 
-      showViewVolunteer: false,
+      showViewVolunteer: true, // set this to true by default
       showEditVolunteer: false,
       showAddVolunteer: false,
-      showManageVolunteerActivities: true
+      showManageVolunteerActivities: false
     };
 
     this.getAllUsers = this.getAllUsers.bind(this);

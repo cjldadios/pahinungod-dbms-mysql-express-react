@@ -25,9 +25,21 @@ class Activity extends Component {
     this.getUserInfo = this.getUserInfo.bind(this);
     this.getUserActivity = this.getUserActivity.bind(this);
     this.getActivity = this.getActivity.bind(this);
-
-
     this.handleClick = this.handleClick.bind(this);
+    this.getDate = this.getDate.bind(this);
+  }
+
+  getDate(originalDate) {
+    // raw date is like this 2019-03-02T16:00:00.000Z 
+    var parsedDate = originalDate.split('-');
+    // console.log("parsedDate[0]: " + parsedDate[0]); // year
+    // console.log("parsedDate[1]: " + parsedDate[1]); // month
+    // console.log("parsedDate[2]: " + parsedDate[2]); // day but...
+    // ...the day has some trailing characters
+    // so parse the leading int which is the date
+    var daydate = parseInt(parsedDate[2], 10); // 10 for base 10
+    // console.log("parseInt(parsedDate[2]): " + daydate); // trailing characters
+    return( parsedDate[1] + "/" + daydate + "/" + parsedDate[0] );
   }
 
   componentDidMount() {
@@ -159,7 +171,7 @@ class Activity extends Component {
                         <th>No. of Volunteers</th>
                         <th>Participants</th>
                         <th>Coordinator-in-charge</th>
-                        <th>User ID</th>
+                        {/* <th>User ID</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -169,12 +181,12 @@ class Activity extends Component {
                             <td data-label="Activity ID">{activity.activityId}</td> 
                             <td data-label="Name">{activity.activityname}</td> 
                             <td data-label="Description">{activity.description}</td>  
-                            <td data-label="Start Date">{activity.startdate}</td>  
-                            <td data-label="End Date">{activity.enddate}</td>  
+                            <td data-label="Start Date">{this.getDate(activity.startdate)}</td>    
+                            <td data-label="End Date">{this.getDate(activity.enddate)}</td>    
                             <td data-label="No. of Volunteers">{activity.noOfVolunteers}</td> 
                             <td data-label="Participants">{activity.participants}</td> 
                             <td data-label="Coordinator-in-charge">{activity.coordinatorincharge}</td>  
-                            <td data-label="User ID">{activity.userId}</td> 
+                            {/* <td data-label="User ID">{activity.userId}</td>  */}
                           </tr>
                         ) 
                       }

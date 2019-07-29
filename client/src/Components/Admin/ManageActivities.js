@@ -25,6 +25,20 @@ class ManageActivities extends Component {
     this.handleViewActivities = this.handleViewActivities.bind(this);
     this.handleAddActivity = this.handleAddActivity.bind(this);
     this.handleEditActivity = this.handleEditActivity.bind(this);
+    this.getDate = this.getDate.bind(this);
+  }
+
+  getDate(originalDate) {
+    // raw date is like this 2019-03-02T16:00:00.000Z 
+    var parsedDate = originalDate.split('-');
+    // console.log("parsedDate[0]: " + parsedDate[0]); // year
+    // console.log("parsedDate[1]: " + parsedDate[1]); // month
+    // console.log("parsedDate[2]: " + parsedDate[2]); // day but...
+    // ...the day has some trailing characters
+    // so parse the leading int which is the date
+    var daydate = parseInt(parsedDate[2], 10); // 10 for base 10
+    // console.log("parseInt(parsedDate[2]): " + daydate); // trailing characters
+    return( parsedDate[1] + "/" + daydate + "/" + parsedDate[0] );
   }
 
   componentDidMount() {
@@ -172,14 +186,14 @@ class ManageActivities extends Component {
                                   <tr key={activity.activityId}>
                                     <td>{activity.activityId}</td>
                                     <td>{activity.activityname}</td>
-                                    <td>{activity.startdate}</td>
-                                    <td>{activity.enddate}</td>
+                                    <td>{this.getDate(activity.startdate)}</td>
+                                    <td>{this.getDate(activity.enddate)}</td>
                                     <td>{activity.participants}</td>
                                     <td>{activity.coordinatorincharge}</td>
                                     <td>
                                       <strong>Edit: </strong><br/>
                                       <button value={activity.activityId} onClick={this.handleEditActivity} >Details</button>
-                                      <button value={activity.activityId} onClick={this.handleEditActivity} >Volunteers</button>
+                                      {/* <button value={activity.activityId} onClick={this.handleEditActivity} >Volunteers</button> */}
                                     </td>
                                   </tr>
                                 ) 

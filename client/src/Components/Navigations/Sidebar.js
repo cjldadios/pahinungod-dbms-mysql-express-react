@@ -64,7 +64,7 @@ class Sidebar extends Component {
                     <div>
                       <a className="active item" onClick={this.handleViewManageVolunteers}>Manage Volunteers</a>
                       <a className="item" onClick={this.handleViewManageActivities}>Manage Activities</a>
-                      <a className="item" onClick={this.handleViewManagePrograms}>Manage Programs</a>
+                      {/* <a className="item" onClick={this.handleViewManagePrograms}>Manage Programs</a> */}
                       <a className="item" onClick={this.handleViewManageAdministrators}>Manage Administrators</a>
                     </div>
                   ) : (
@@ -72,7 +72,7 @@ class Sidebar extends Component {
                       <div>
                         <a className="item" onClick={this.handleViewManageVolunteers}>Manage Volunteers</a>
                         <a className="active item" onClick={this.handleManageActivities}>Manage Activities</a>
-                        <a className="item" onClick={this.handleViewManagePrograms}>Manage Programs</a>
+                        {/* <a className="item" onClick={this.handleViewManagePrograms}>Manage Programs</a> */}
                         <a className="item" onClick={this.handleViewManageAdministrators}>Manage Administrators</a>
                       </div>
                     ) : (
@@ -88,14 +88,14 @@ class Sidebar extends Component {
                           <div>
                             <a className="item" onClick={this.handleViewManageVolunteers}>Manage Volunteers</a>
                             <a className="item" onClick={this.handleViewManageActivities}>Manage Activities</a>
-                            <a className="item" onClick={this.handleViewManagePrograms}>Manage Programs</a>
+                            {/* <a className="item" onClick={this.handleViewManagePrograms}>Manage Programs</a> */}
                             <a className="active item" onClick={this.handleManageAdministrators}>Manage Administrators</a>
                           </div>
                         ) : ( // lastly, if nothing is active, nothing is active
                           <div>
                             <a className="active item" onClick={this.handleViewManageVolunteers}>Manage Volunteers</a>
                             <a className="active item" onClick={this.handleViewManageActivities}>Manage Activities</a>
-                            <a className="active item" onClick={this.handleViewManagePrograms}>Manage Programs</a>
+                            {/* <a className="active item" onClick={this.handleViewManagePrograms}>Manage Programs</a> */}
                             <a className="active item" onClick={this.handleViewManageAdministrators}>Manage Administrators</a>
                           </div>
                         )

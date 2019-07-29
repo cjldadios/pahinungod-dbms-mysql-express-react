@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 
 // import DatePicker from 'react-datepicker';
 
+
+var globalvar1 = 0;
+
 class UserActivity extends Component {
   constructor(props){
     super(props);
@@ -30,11 +33,16 @@ class UserActivity extends Component {
     this.getUserInfo = this.getUserInfo.bind(this);
     this.handleActivitySearch = this.handleActivitySearch.bind(this);
     this.isVolunteerActivity = this.isVolunteerActivity.bind(this);
+    this.handleAddActivity = this.handleAddActivity.bind(this);
+    this.handleRemoveActivity = this.handleRemoveActivity.bind(this);
+    this.addUserActivity = this.addUserActivity.bind(this);
+    this.removeUserActivity = this.removeUserActivity.bind(this);
   }
 
   componentDidMount() {
     this.getUserInfo();
     this.getUserActivity();
+    this.searchActivity(); 
   }
 
   getUserActivity = async e => {
@@ -83,9 +91,7 @@ class UserActivity extends Component {
     this.setState({ selectedUserObject: JSON.parse(body)[0] }); // get as JSON object, first row since one unique
   }
 
-  // getActivity(activityId) {
   getActivity = async e => {
-
     const response = await fetch('/get-activity', {
       method: 'POST',
       headers: {
@@ -96,11 +102,8 @@ class UserActivity extends Component {
         activityIdCount: this.state.activityCount
       })
     });
-    
     const body = await response.text(); // this should return a single row
-
     // console.log("body: " + body);
-   
     this.setState({ userActivities: JSON.parse(body) })
   }
 
@@ -155,6 +158,53 @@ class UserActivity extends Component {
     return(false);
   }
 
+  // rather than setting a state variable, these two methods sets the value of a global variable to perform a query, because these methods are called by a dynamic component rendered by a this.state.variable.map() function
+  handleAddActivity(activityId) {
+    globalvar1 = activityId;
+      this.addUserActivity();
+  }
+  handleRemoveActivity(activityId) {
+    globalvar1 = activityId;
+    this.removeUserActivity();
+  }
+
+  addUserActivity = async e => {
+    console.log("Here at addUserActivity");
+    console.log("userid: " + this.props.userid);
+    console.log("activityid: " + this.state.tempActivityIdForFetching);
+    const response = await fetch('/add-user-activity', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userid: this.props.userid,
+        activityid: globalvar1
+      })
+    });
+    const body = await response.text(); 
+    console.log("Fetch response: " + body);
+    // this.setState({ userActivities: JSON.parse(body) })
+    this.getUserActivity() // reload user activities using the function called at componentDidMount()
+  }
+
+  removeUserActivity = async e => {
+    const response = await fetch('/remove-user-activity', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userid: this.props.userid,
+        activityid: globalvar1
+      })
+    });
+    const body = await response.text(); 
+    console.log("Fetch response: " + body);
+    // this.setState({ userActivities: JSON.parse(body) })
+    this.getUserActivity() // reload user activities using the function called at componentDidMount()    
+  }
+
   render() {
     return (
     	// opening delimiter div tag
@@ -201,14 +251,13 @@ class UserActivity extends Component {
                       Object.keys(this.state.searchedActivitiesArray).length > 0 ? (
                         <div>
                           <div>
-
                             <label className="ui label">Matched with "{this.state.activitySearchText}"</label>
                             <label className="ui label">Total: {Object.keys(this.state.searchedActivitiesArray).length}</label>
 
                             <table className="ui celled compact table">
                               <thead>
                                 <tr>
-                                  <th>Added</th>
+                                  <th>Add</th>
                                   <th>Activity ID</th>
                                   <th>Name</th> 
                                   <th>Description</th>
@@ -224,19 +273,26 @@ class UserActivity extends Component {
                                   this.state.searchedActivitiesArray.map(activity => 
                                     <tr key={activity.activityId}>
                                       <td>
-                                        <button className="ui button">
                                           {
                                             this.isVolunteerActivity(activity.activityId) ? (
                                               <div>
-                                                <i className="large green checkmark icon"></i>
+                                                <button 
+                                                onClick={() => this.handleRemoveActivity(activity.activityId)}
+                                                className="ui icon button">
+                                                  <i className="large green checkmark icon"></i>
+                                                </button>
                                               </div>
                                             ) : (
-                                               <div>
-                                                 Add
+                                              <div>
+                                                <button value={activity.activityId}
+                                                onClick={() => this.handleAddActivity(activity.activityId)}
+                                                className="ui icon button"
+                                                >
+                                                  <i className="add icon"></i>
+                                                </button>
                                               </div>
                                             )
                                           }
-                                        </button>
                                       </td>
                                       <td data-label="Activity ID">{activity.activityId}</td> 
                                       <td data-label="Name">{activity.activityname}</td> 
